@@ -1,8 +1,8 @@
-Mixtec Parser
+# Mixtec Parser
 
 This repo contains a parser and interpreter for a limited Mixtec grammar.
 
-The grammar is as follows:
+## The grammar is as follows:
     S = (Sent end)+
     Sent = Clause | obj (Date Clause | Clause) | Date (obj Clause | Clause)
     Clause = Clause_f+ (Date_tail | Obj_tail | ɛ)
@@ -12,23 +12,26 @@ The grammar is as follows:
     Clause_f = h ( nd | Near_date | ɛ )
     Near_date = near_obj (nd | ɛ)
 
-Terminal Symbols (Tokens)
-h = human figures
+## Terminal Symbols (Tokens)
+    h = human figures
 
-y = year symbol
+    y = year symbol
 
-nd = name-date symbol. Represents a name when associated with a human figure and a date when associated with a year
+    nd = name-date symbol. Represents a name when associated with a human figure and a date when associated with a year
 
-obj = a drawn object that is not a person, year, or name-date and that is not associated with an h token (see near_obj). Examples include typonyms, tables, incense, ballcourts, temples, cities, etc.
+    obj = a drawn object that is not a person, year, or name-date and that is not associated with an h token (see near_obj). Examples include typonyms, tables, incense, ballcourts, temples, cities, etc.
 
-near_obj = Object that is note a year/name-date but still associated with a specific person, such as a weapon, head dress, torch, throne, epithet, umbilical cord, etc. A near_obj has a possessive or prepositional relationship with the associated h token. For example, a person's epithet belongs to them; a person sits on a throne; a person holds a torch. Saying that a person is "at" a place is an exception to the near_obj association because typonyms apply to everyone in the scene. More generally, objects that would have any sort of prepositional relationship to multiple human figures in a scene should be considered general objects and handled at interpretation time.
+    near_obj = Object that is note a year/name-date but still associated with a specific person, such as a weapon, head dress, torch, throne, epithet, umbilical cord, etc. A near_obj has a possessive or prepositional relationship with the associated h token. For example, a person's epithet belongs to them; a person sits on a throne; a person holds a torch. Saying that a person is "at" a place is an exception to the near_obj association because typonyms apply to everyone in the scene. More generally, objects that would have any sort of prepositional relationship to multiple human figures in a scene should be considered general objects and handled at interpretation time.
 
-end = end of sentence token
+    end = end of sentence token
+
+## Notes About the Tokenizer
 
 The parser in this repository expects the following additional functions to be completed at the tokenization step.
-- nd associated with years are always put after them in tokenized data regarless of how they are drawn. Ditto for nd associated with human figures.
 
-- near_obj tokens are always placed after the h token they are associated with during tokenization.
+    - nd associated with years are always put after them in tokenized data regarless of how they are drawn. Ditto for nd associated with human figures.
 
-- Tokenizer inserts the token end, which is purely a meta-token, at the end of each scene, which should correspond roughly to sentences.
+    - near_obj tokens are always placed after the h token they are associated with during tokenization.
+
+    - Tokenizer inserts the token end, which is purely a meta-token, at the end of each scene, which should correspond roughly to sentences.
 
