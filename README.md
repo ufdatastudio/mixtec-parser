@@ -3,6 +3,7 @@
 This repo contains a parser and interpreter for a limited Mixtec grammar.
 
 ## The grammar is as follows:
+
     S = (Sent end)+
     Sent = Clause | obj (Date Clause | Clause) | Date (obj Clause | Clause)
     Clause = Clause_f+ (Date_tail | Obj_tail | ɛ)
@@ -13,6 +14,7 @@ This repo contains a parser and interpreter for a limited Mixtec grammar.
     Near_date = near_obj (nd | ɛ)
 
 ## Terminal Symbols (Tokens)
+
     h = human figures
 
     y = year symbol
@@ -27,7 +29,7 @@ This repo contains a parser and interpreter for a limited Mixtec grammar.
 
 ## Notes About the Tokenizer
 
-The parser in this repository expects the following additional functions to be completed at the tokenization step.
+    The parser in this repository expects the following additional functions to be completed at the tokenization step.
 
     - nd associated with years are always put after them in tokenized data regarless of how they are drawn. Ditto for nd associated with human figures.
 
