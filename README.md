@@ -9,7 +9,8 @@ Clause = Clause_f+ (Date_tail | Obj_tail | ɛ)
 Date_tail = Date (obj Clause_f+ | Clause_f+ | ɛ)
 Obj_tail = obj (Date Clause_f+ | Clause_f+ | ɛ)
 Date = y (nd | ɛ)
-Clause_f = h ( nd | near_obj (nd | ɛ) | ɛ )
+Clause_f = h ( nd | Near_date | ɛ )
+Near_date = near_obj (nd | ɛ)
 
 Terminal Symbols (Tokens)
 h = human figures
