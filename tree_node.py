@@ -1,12 +1,12 @@
 # CWDE615
 # a file for parse tree nodes
-from tokens import Token
+import tokens
 from abc import ABC, abstractmethod
 
 class TreeNode(ABC):
     def __init__(self, first_token, children : list[object] = None):
         self.children : list[object] = children if children != None else []
-        self.first_token : Token = first_token
+        self.first_token : tokens.Token = first_token
 
     def add_children(self, chs):
         for ch in chs:

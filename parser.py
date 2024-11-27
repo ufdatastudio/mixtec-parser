@@ -4,9 +4,6 @@ import tokens
 import tree_node
 
 class Parser():
-    def __init__(self, tks : list[tokens.Token]):
-        self.tks = tks
-        self.tks.reverse() # reverse tks to make it a stack and allow easy pop via List's pop method.
 
     # HELPERS
     @staticmethod
@@ -21,7 +18,7 @@ class Parser():
         assert False
     
     @staticmethod
-    def call_descent_method(c: list[tree_node.TreeNode], m: function):
+    def call_descent_method(c: list[tree_node.TreeNode], m):
         c.append(m())
 
     def consume(self, exp : type):
@@ -177,10 +174,7 @@ class Parser():
         
         return tree_node.NearDate(first_token, children)
 
-    # PARSE FUNCTIONS
-    def __call__(self) -> tree_node.Start:
-        return self.start()
-    
+    # PARSE FUNCTION
     def __call__(self, tks : list[tokens.Token]) -> tree_node.Start:
         self.tks = tks
         self.tks.reverse()
@@ -195,13 +189,14 @@ def get_sample_tokens():
         'lady-standing-right' : tokens.Human(0,0,0,1,1),
         'lady-standing-left' : tokens.Human(0,0,0,1,0),
         'lady-sitting-right' : tokens.Human(0,0,0,0,1),
-        'lady-sitting-left' : tokens.Human(0,0,0,0,0,0),
+        'lady-sitting-left' : tokens.Human(0,0,0,0,0),
         'year-1-reed' : tokens.Year(0, 0, 'Reed', 1),
         'year-5-house' : tokens.Year(0,0,'House', 5),
         'date-4-wind' : tokens.NameDate(0,0, 'Wind', 1),
         'date-6-death' : tokens.NameDate(0,0, 'Death', 6),
         'date-3-flint' : tokens.NameDate(0,0,'Flint', 3),
         'date-10-serpent' : tokens.NameDate(0,0,'Serpent',10),
+        'end' : tokens.End(0,0,0),
     }
     
     return samples
@@ -212,6 +207,8 @@ def construct_test_case(sample_keys : list[str]):
 
     for k in sample_keys:
         result.append(samples[k])
+
+    return result
         
 def test1():
     test_case : list[tokens.Token] = construct_test_case([
@@ -220,10 +217,11 @@ def test1():
         'date-4-wind',
         'lady-sitting-left',
         'date-10-serpent',
+        'end'
     ])
     
-    parser = Parser(tks=test_case)
-    root : tree_node.TreeNode = parser()
+    parser = Parser()
+    root : tree_node.TreeNode = parser(tks=test_case)
     return root
 
 def run_tests():
