@@ -42,9 +42,13 @@ class Parser():
         children : list[tree_node.TreeNode] = []
         first_token : tokens.Token = self.next_token()
 
+        sent_id = 0 # A bit of a hack. Debug information added to end token nodes. 
+
         while len(self.tks) > 0:
             self.call_descent_method(children, self.sent)
             self.consume_next_token(children, tokens.End)
+            children[-1].sent_id = sent_id
+            sent_id += 1
 
         return tree_node.Start(first_token, children)
 
