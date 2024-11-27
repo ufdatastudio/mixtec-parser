@@ -185,4 +185,50 @@ class Parser():
         self.tks = tks
         self.tks.reverse()
         return self.start()
+
+def get_sample_tokens():
+    samples : dict[str, tokens.Token] = {
+        'lord-standing-right' : tokens.Human(0,0,1,1,1),
+        'lord-standing-left' : tokens.Human(0,0,1,1,0),
+        'lord-sitting-right' : tokens.Human(0,0,1,0,1),
+        'lord-sitting-left' : tokens.Human(0,0,1,0,0),
+        'lady-standing-right' : tokens.Human(0,0,0,1,1),
+        'lady-standing-left' : tokens.Human(0,0,0,1,0),
+        'lady-sitting-right' : tokens.Human(0,0,0,0,1),
+        'lady-sitting-left' : tokens.Human(0,0,0,0,0,0),
+        'year-1-reed' : tokens.Year(0, 0, 'Reed', 1),
+        'year-5-house' : tokens.Year(0,0,'House', 5),
+        'date-4-wind' : tokens.NameDate(0,0, 'Wind', 1),
+        'date-6-death' : tokens.NameDate(0,0, 'Death', 6),
+        'date-3-flint' : tokens.NameDate(0,0,'Flint', 3),
+        'date-10-serpent' : tokens.NameDate(0,0,'Serpent',10),
+    }
+    
+    return samples
+
+def construct_test_case(sample_keys : list[str]):
+    samples = get_sample_tokens()
+    result : list[tokens.Token] = []
+
+    for k in sample_keys:
+        result.append(samples[k])
+        
+def test1():
+    test_case : list[tokens.Token] = construct_test_case([
+        'year-5-house', 
+        'lord-standing-right',
+        'date-4-wind',
+        'lady-sitting-left',
+        'date-10-serpent',
+    ])
+    
+    parser = Parser(tks=test_case)
+    root : tree_node.TreeNode = parser()
+    return root
+
+def run_tests():
+    test1()
+
+if __name__ == "__main__":
+    run_tests()
             

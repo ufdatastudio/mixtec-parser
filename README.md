@@ -31,9 +31,9 @@ This repo contains a parser and interpreter for a limited Mixtec grammar.
 
     The parser in this repository expects the following additional functions to be completed at the tokenization step.
 
-    - nd associated with years are always put after them in tokenized data regarless of how they are drawn. Ditto for nd associated with human figures.
+    - nd associated with years are always put after them in tokenized data regarless of how they are drawn. Ditto for nd associated with human figures, representing their names.
 
-    - near_obj tokens are always placed after the h token they are associated with during tokenization.
+    - near_obj tokens are always placed after the h token they are associated with during tokenization but before any nd that might be associated with that person.
 
-    - Tokenizer inserts the token end, which is purely a meta-token, at the end of each scene, which should correspond roughly to sentences.
+    - Tokenizer inserts the end of sentence token, which is purely a meta-token, at the end of each scene, which should correspond roughly to sentences.
 
