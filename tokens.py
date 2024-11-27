@@ -1,12 +1,14 @@
 # CWDE615
 # file for a hierarchy of token types
-from abc import ABC
+from tree_node import TreeNode
 
 # ABC for the token classes, which act more like structs, since they have no methods in the current design.
-class Token(ABC):
+class Token(TreeNode):
     def __init__(self, x, y):
+        super().__init__(None, None) # sets first_token to None and children to []
         self.x = x
         self.y = y
+        self.children = None # overwrite children to None, signaling that this is a leaf in the AST.
 
 class Human(Token):
     def __init__(self, x, y, gender, pose, orientation):
@@ -15,32 +17,50 @@ class Human(Token):
         self.pose = pose
         self.orientation = orientation
 
+    def interpret(self):
+        None
+
 class Year(Token):
     def __init__(self, x, y, symbol, number):
         super().__init__(x, y)
         self.symbol = symbol
         self.number = number
 
-# TODO: Consider adding a second level to the hierarchy from which Year and NameDate both inherit.
+    def interpret(self):
+        None
+
+# TODO: Consider adding am additional level to the hierarchy from which Year and NameDate both inherit.
 # Currently no advantage, so not implemented despite the fact they have the same set of attributes
 class NameDate(Token):
     def __init__(self, x, y, symbol, number):
         super().__init__(x, y)
         self.symbol = symbol
         self.number = number
+    
+    def interpret(self):
+        None
 
 # TODO: Consider adding specialized classes for different types of objects and relationships of near_obj tokens
 class Obj(Token):
     def __init__(self, x, y, identity):
         super().__init__(x, y)
         self.identity = identity
+    
+    def interpret(self):
+        None
 
 class NearObj(Token):
     def __init__(self, x, y, identity):
         super().__init__(x, y)
         self.identity = identity
     
+    def interpret(self):
+        None
+    
 class End(Token):
     def __init__(self, x, y, sent_id):
         super().__init__(x, y) # set x and y of ABC to -1.
         self.sent_id = sent_id
+    
+    def interpret(self):
+        None

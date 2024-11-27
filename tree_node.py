@@ -4,41 +4,37 @@ from tokens import Token
 from abc import ABC, abstractmethod
 
 class TreeNode(ABC):
-    def __init__(self, first_token : Token, children : list[object] = None):
-        self.t : Token = first_token
+    def __init__(self, first_token, children : list[object] = None):
         self.children : list[object] = children if children != None else []
+        self.first_token : Token = first_token
 
     def add_children(self, chs):
         for ch in chs:
             self.children.append(ch)
-
-    def get_token_type(self):
-        type(self.t)
     
     def get_children(self):
         return self.children
     
     def get_token(self):
-        return self.t
+        return self.first_token
     
     @abstractmethod
     def interpret(self):
         pass
     
 class Start(TreeNode):
-    def __init__(self, token, children = None):
-        super().__init__(token, children)
+    def __init__(self, first_token, children = None):
+        super().__init__(first_token, children)
 
     def interpret(self):
-        for sent in self.children:
-            return self.children.interpret()
+        return None
         
 class Sent(TreeNode):
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
     def interpret(self):
-        None
+        return None
 
 class Clause(TreeNode):
     def __init__(self, first_token, children = None):
