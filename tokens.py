@@ -25,7 +25,7 @@ class Human(Token):
     # Thus, they are not returned by interpret, which simply says Lord or Lady according to the
     # Humans gender.
     def interpret(self):
-        return f'{self.gender_dict[self.gender]}'
+        return f'{self.gender_dict[self.gender]}' # Lord/Lady
         
 
 class Year(Token):
@@ -35,7 +35,7 @@ class Year(Token):
         self.number = number
 
     def interpret(self) -> str:
-        return f'{self.number} {self.symbol}'
+        return f'{self.number} {self.symbol}' # # Symbol
 
 # TODO: Consider adding am additional level to the hierarchy from which Year and NameDate both inherit.
 # Currently no advantage, so not implemented despite the fact they have the same set of attributes
@@ -46,7 +46,7 @@ class NameDate(Token):
         self.number = number
     
     def interpret(self) -> str:
-        return f'{self.number} {self.symbol}'
+        return f'{self.number} {self.symbol}' # # Symbol
 
 # TODO: Consider adding specialized classes for different types of objects and relationships of near_obj tokens
 class Obj(Token):
@@ -55,7 +55,7 @@ class Obj(Token):
         self.identity = identity
     
     def interpret(self) -> str:
-        return f"{self.identity}"
+        return f"{self.identity}" # ObjIdentity
 
 class NearObj(Token):
     def __init__(self, x, y, identity):
@@ -63,7 +63,7 @@ class NearObj(Token):
         self.identity = identity
     
     def interpret(self) -> str:
-        return f'{self.identity}'
+        return f'{self.identity}' # NearObjIdentity
     
 class End(Token):
     def __init__(self, x, y, sent_id):

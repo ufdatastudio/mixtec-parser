@@ -64,10 +64,15 @@ class Clause(TreeNode):
     
     def interpret(self):
         i = 0
-        human_list = []
+        l_human_list : list[str] = []
+        l_pose_list : list[int] = []
+        l_orientation_list : list[int] = []
 
-        while self.children[i].is_first_token_type(tokens.Human):
-            human_list.append(self.children[i].interpret())
+        while i < len(self.children) and self.children[i].is_first_token_type(tokens.Human):
+            l_human_list.append(self.children[i].interpret())
+            l_pose_list.append(self.children[i].pose)
+            l_orientation_list.append(self.children[i].orientation)
+
             i += 1
 
         obj_tail = None
@@ -78,24 +83,179 @@ class Clause(TreeNode):
             obj_tail = self.children[i].interpret()
         elif i < len(self.children) and self.children[i].is_first_token_type(tokens.Year):
             date_tail = self.children[i].interpret()
+
+        # real_tail is a tuple if either of the ifs above executed. Otherwise, it is None
+        real_tail = obj_tail if obj_tail != None else date_tail
+        # bit records whether obj_tail is None.
+        # If real_tail is a tuple and tail_bit is 1, then real_tail corresponds to a date_tail tuple.
+        tail_bit = 0 if obj_tail != None else 1
+
+        l_standing = True
+        l_same = True
+        direction = None
         
-        # do something with those data.
-        return "PLACEHOLDER"
+        for l in l_pose_list:
+            if l == 0:
+                l_standing = False
+                break
+
+        for dir in l_orientation_list:
+            if direction == None:
+                direction = dir
+            else:
+                if dir != direction:
+                    l_same = False
+                    break  
+
+        if real_tail == None: # obj_tail == None and date_tail == None:
+            return_list : list[str] = []
+
+            for human in l_human_list:
+                h_nd_near = human.split('$') # [(Lady/Lord # Symbol OR a Lady/Lord)] OR [(Lady/Lord # Symbol OR a Lady/Lord), NearObjIdentity]
+                return_list.append(h_nd_near[0])
             
+            if len(return_list) == 1:
+                return f"there was {return_list[0]}"
+            else:
+                joined_return_list = ", ".join(return_list[0:-1])
+                joined_return_list = ", and ".join([joined_return_list, return_list[-1]])
+                
+                if l_same and l_standing:
+                    return " ".join(["there was a procession or journey including", joined_return_list])
+                if not l_same and l_standing:
+                    return " ".join(["there was a gathering including", joined_return_list])
+
+                return " ".join(["there were", joined_return_list])
+
+        tail_string, r_pose_list, r_orientation_list = real_tail
+
+        tail_list = tail_string.split('@')
+
+        if len(tail_bit) == 1:
+            obj_string = tail_list[0]
+            date_string = None
+            human_string = None
+        if len(tail_list) == 2:
+            obj_string = tail_list[0]
+            date_string = None
+            human_string = tail_list[1]
+        elif len(tail_list) == 3:
+            obj_string = tail_list[0]
+            date_string = tail_list[1]
+            human_string = tail_list[2]
+
+        if tail_bit == 1: # Clause has an Obj_tail
+            tmp = obj_string
+            obj_string = date_string
+            date_string = tmp
+        
+        if human_string != None:
+            r_human_list = human_string.split('#')
+        else:
+            return_list : list[str] = []
+
+            for human in l_human_list:
+                h_nd_near = human.split('$') # [(Lady/Lord # Symbol OR a Lady/Lord)] OR [(Lady/Lord # Symbol OR a Lady/Lord), NearObjIdentity]
+                return_list.append(h_nd_near[0])
+            
+            if len(return_list) == 1:
+                result_a = f"there was {return_list[0]}"
+            else:
+                joined_return_list = ", ".join(return_list[0:-1])
+                joined_return_list = ", and ".join([joined_return_list, return_list[-1]])
+                
+                if l_same and l_standing:
+                    result_a = " ".join(["there was a procession or journey including", joined_return_list])
+                if not l_same and l_standing:
+                    result_a = " ".join(["there was a gathering including", joined_return_list])
+
+                result_a = " ".join(["there were", joined_return_list])
+
+            if tail_bit == 0: # Obj_tail without second Clause_f+
+                return " near a(n) ".join([result_a, obj_string])
+            else: # Date_tail without a second Clause_f+
+                return " ".join([result_a, date_string]) # simply join the result_a with the date string, since Date formats itself.
+        
+        
+
 
 class DateTail(TreeNode):
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
-    def interpret(self):
-        return None
+    # TODO: Check that returning a tuple like this doesn't break the interface.
+    def interpret(self) -> tuple[str, list[int], list[int]]:
+        date_string : str = self.first_token.interpret()
+
+        if len(self.children) > 1:
+            obj_string : str | None = None
+            i : int = 1
+            
+            if self.children[1].is_first_token_type(tokens.Obj):
+                obj_string = self.children[1].interpret()
+                i += 1
+
+            r_human_list = []
+            r_pose_list : list[int] = []
+            r_orientation_list : list[int] = []
+            
+            while i < len(self.children) and self.children[i].is_first_token_type(tokens.Human):
+                r_human_list.append(self.children[i].interpret())
+                r_pose_list.append(self.children[i].pose)
+                r_orientation_list.append(self.children[i].orientation)
+                
+                i += 1 
+    
+            human_string = "#".join(r_human_list)
+
+            # Note that, according to the grammar, it's not actually possible
+            # for the human_string to be empty.
+            if obj_string == None:
+                return "@".join([date_string, human_string]), r_pose_list, r_orientation_list
+            else:
+                return "@".join(date_string, obj_string, human_string), r_pose_list, r_orientation_list
+
+        else:
+            return date_string
+
 
 class ObjTail(TreeNode):
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
-    def interpret(self):
-        return None
+    def interpret(self) -> tuple[str, list[int], list[int]]:
+        obj_string = self.first_token.interpret()
+
+        if len(self.children) > 1:
+            date_string : str | None = None
+            i : int = 1
+            
+            if self.children[1].is_first_token_type(tokens.Obj):
+                date_string = self.children[1].interpret()
+                i += 1
+
+            r_human_list = []
+            r_pose_list : list[int] = []
+            r_orientation_list : list[int] = []
+
+            while self.children[i].is_first_token_type(tokens.Human):
+                r_human_list.append(self.children[i].interpret())
+                r_pose_list.append(self.children[i].pose)
+                r_orientation_list.append(self.children[i].orientation)
+
+                i += 1 
+    
+            human_string = "#".join(r_human_list)
+
+            # Note that, according to the grammar, it's not actually possible
+            # for the human_string to be empty.
+            if date_string == None:
+                return "@".join([obj_string, human_string]), r_pose_list, r_orientation_list
+            else:
+                return "@".join(obj_string, date_string, human_string), r_pose_list, r_orientation_list
+
+        else:
+            return obj_string
 
 class Date(TreeNode):
     def __init__(self, first_token, children = None):
@@ -118,7 +278,32 @@ class ClauseF(TreeNode):
         super().__init__(first_token, children)
     
     def interpret(self):
-        return None
+        h_string : str = self.first_token.interpret() # h
+
+        # there is a tail.
+        if len(self.children) > 1:
+            tail_string : str = self.children[1].interpret()
+            nd_near_obj : list[str] = tail_string.split("$")
+
+            # tail starts with a name date
+            if self.children[1].is_first_token_type(tokens.NameDate):
+                
+                return f'{h_string} {nd_near_obj[0]}' # Lord/Lady # Symbol
+            
+            # tail starts with a NearObj.
+            elif self.children[1].is_first_token_type(tokens.NearObj):
+                
+                # if it starts with a NearObj, there could be a NameDate
+                # associated with the parent h token after it. Handle
+                # accordingly.
+                if len(nd_near_obj) == 2:
+                    return "$".join(f'{h_string} {nd_near_obj[1]}',f'{nd_near_obj[0]}') # Lord/Lady # Symbol$NearObjIdentity 
+                else:
+                    return "$".join(f'a {h_string}',f'{nd_near_obj[0]}') # a Lord/Lady$NearObjIdentity
+        
+        else:
+            # h is alone, without a tail. Corresponds to nameless person not associated with a near_obj token.
+            return f'a {h_string}' # 'a Lord' or 'a Lady' since they have no name-date.
 
 class NearDate(TreeNode):
     def __init__(self, first_token, children = None):
