@@ -73,6 +73,6 @@ class End(Token):
     
     def interpret(self) -> str:
         if self.verbose:
-            return f" |{self.sent_id}| "
+            return f" |{self.sent_id}|\n"
         else:
             return ""
