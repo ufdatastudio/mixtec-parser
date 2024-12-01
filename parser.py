@@ -205,7 +205,7 @@ def get_sample_tokens():
     
     return samples
 
-def construct_test_case(sample_keys : list[str]):
+def construct_from_samples(sample_keys : list[str]):
     samples = get_sample_tokens()
     result : list[tokens.Token] = []
 
@@ -215,7 +215,7 @@ def construct_test_case(sample_keys : list[str]):
     return result
         
 def test1():
-    test_case : list[tokens.Token] = construct_test_case([
+    test_case : list[tokens.Token] = construct_from_samples([
         'year-5-house', 
         'lord-standing-right',
         'date-4-wind',
