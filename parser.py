@@ -189,14 +189,14 @@ class Parser():
 
 def get_sample_tokens():
     samples : dict[str, tokens.Token] = {
-        'lord-standing-right' : tokens.Human(0,0,1,1,1),
-        'lord-standing-left' : tokens.Human(0,0,1,1,0),
-        'lord-sitting-right' : tokens.Human(0,0,1,0,1),
-        'lord-sitting-left' : tokens.Human(0,0,1,0,0),
-        'lady-standing-right' : tokens.Human(0,0,0,1,1),
-        'lady-standing-left' : tokens.Human(0,0,0,1,0),
-        'lady-sitting-right' : tokens.Human(0,0,0,0,1),
-        'lady-sitting-left' : tokens.Human(0,0,0,0,0),
+        'lord-standing-right' : tokens.Human(0,0,0,1,1),
+        'lord-standing-left' : tokens.Human(0,0,0,1,0),
+        'lord-sitting-right' : tokens.Human(0,0,0,0,1),
+        'lord-sitting-left' : tokens.Human(0,0,0,0,0),
+        'lady-standing-right' : tokens.Human(0,0,1,1,1),
+        'lady-standing-left' : tokens.Human(0,0,1,1,0),
+        'lady-sitting-right' : tokens.Human(0,0,1,0,1),
+        'lady-sitting-left' : tokens.Human(0,0,1,0,0),
         'year-1-reed' : tokens.Year(0, 0, 'Reed', 1),
         'year-5-house' : tokens.Year(0,0,'House', 5),
         'year-13-rabbit' : tokens.Year(0,0, 'Rabbit', 13),
