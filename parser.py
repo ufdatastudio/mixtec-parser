@@ -179,10 +179,13 @@ class Parser():
         return tree_node.NearDate(first_token, children)
 
     # PARSE FUNCTION
-    def __call__(self, tks : list[tokens.Token]) -> tree_node.Start:
+    def parse(self, tks : list[tokens.Token]) -> tree_node.Start:
         self.tks = tks
         self.tks.reverse()
         return self.start()
+    
+    def __call__(self, tks : list[tokens.Token]) -> tree_node.Start:
+        return self.parse(tks)
 
 def get_sample_tokens():
     samples : dict[str, tokens.Token] = {

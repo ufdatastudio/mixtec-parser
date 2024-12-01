@@ -4,11 +4,9 @@
 import tree_node
 
 class Interpreter():
-    def __init__(self, root : tree_node.Start):
-        self.root : tree_node.Start = root
     
-    def interpret(self) -> str:
-        return self.root.interpret()
+    def interpret(self, root : tree_node.Start) -> str:
+        return root.interpret()
 
-    def __call__(self) -> str:
-        return self.interpret()
+    def __call__(self, root : tree_node.Start) -> str:
+        return self.interpret(root)
