@@ -14,10 +14,10 @@ def main():
         'end'
     ])
 
-    par = parser.Parser(token_list)
-    ast = par()
-    inter = interpreter.Interpreter(ast)
-    txt = inter()
+    par = parser.Parser()
+    ast = par(token_list)
+    inter = interpreter.Interpreter()
+    txt = inter(ast)
 
     print(txt)
 
