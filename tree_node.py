@@ -32,7 +32,7 @@ class Start(TreeNode):
     def interpret(self) -> str:
         sentence_list : list[str] = []
         # the Start symbol should have an alternating sequence of Sent and end children.
-        for sent_or_end in self.children():
+        for sent_or_end in self.children:
             sentence_list.append(sent_or_end.interpret())
 
         return "".join(sentence_list)
@@ -70,16 +70,18 @@ class Clause(TreeNode):
         l_gender_list : list[int] = []
 
         while i < len(self.children) and self.children[i].is_first_token_type(tokens.Human):
+            i_first_token = self.children[i].first_token
             l_human_list.append(self.children[i].interpret())
-            l_pose_list.append(self.children[i].pose)
-            l_orientation_list.append(self.children[i].orientation)
-            l_gender_list.append(self.children[i].gender)
+            l_pose_list.append(i_first_token.pose)
+            l_orientation_list.append(i_first_token.orientation)
+            l_gender_list.append(i_first_token.gender)
+
             i += 1
 
         obj_tail = None
         date_tail = None
 
-        # get the possible Obj_tail and Date_tail. These may have their own human_list to consider. 
+        # get the possible Obj_tail or Date_tail. These may have their own human_list to consider. 
         if i < len(self.children) and self.children[i].is_first_token_type(tokens.Obj):
             obj_tail = self.children[i].interpret()
         elif i < len(self.children) and self.children[i].is_first_token_type(tokens.Year):
@@ -91,114 +93,55 @@ class Clause(TreeNode):
         # If real_tail is a tuple and tail_bit is 1, then real_tail corresponds to a date_tail tuple.
         tail_bit = 0 if obj_tail != None else 1
 
-        l_standing = True
-        l_same = True
-        direction = None
-        
-        for l in l_pose_list:
-            if l == 0:
-                l_standing = False
-                break
+        # All of the following are UD and set to None if there is no tail for this Clause (real_tail == None)
+        tail_list = None
+        r_pose_list = None
+        r_orientation_list = None
+        r_gender_list = None
+        obj_string = None
+        date_string = None
+        human_string = None
 
-        for dir in l_orientation_list:
-            if direction == None:
-                direction = dir
-            else:
-                if dir != direction:
-                    l_same = False
-                    break  
+        if real_tail != None:
+            tail_string, r_pose_list, r_orientation_list, r_gender_list = real_tail
 
-        if real_tail == None: # obj_tail == None and date_tail == None:
-            return_list : list[str] = []
+            tail_list = tail_string.split('@')
 
-            for human in l_human_list:
-                h_nd_near = human.split('$') # [(Lady/Lord # Symbol OR a Lady/Lord)] OR [(Lady/Lord # Symbol OR a Lady/Lord), NearObjIdentity]
-                return_list.append(h_nd_near[0])
-            
-            if len(return_list) == 1:
-                return f"there was {return_list[0]}"
-            else:
-                joined_return_list = ", ".join(return_list[0:-1])
-                joined_return_list = ", and ".join([joined_return_list, return_list[-1]])
-                
-                if l_same and l_standing:
-                    return " ".join(["there was a procession or journey including", joined_return_list])
-                if not l_same and l_standing:
-                    return " ".join(["there was a gathering including", joined_return_list])
+            if len(tail_list) == 1:
+                obj_string = tail_list[0]
+                date_string = None
+                human_string = None
+            if len(tail_list) == 2:
+                obj_string = tail_list[0]
+                date_string = None
+                human_string = tail_list[1]
+            elif len(tail_list) == 3:
+                obj_string = tail_list[0]
+                date_string = tail_list[1]
+                human_string = tail_list[2]
 
-                return " ".join(["there were", joined_return_list])
-
-        tail_string, r_pose_list, r_orientation_list, r_gender_list = real_tail
-
-        tail_list = tail_string.split('@')
-
-        if len(tail_list) == 1:
-            obj_string = tail_list[0]
-            date_string = None
-            human_string = None
-        if len(tail_list) == 2:
-            obj_string = tail_list[0]
-            date_string = None
-            human_string = tail_list[1]
-        elif len(tail_list) == 3:
-            obj_string = tail_list[0]
-            date_string = tail_list[1]
-            human_string = tail_list[2]
-
-        if tail_bit == 1: # Clause has an Obj_tail
-            tmp = obj_string
-            obj_string = date_string
-            date_string = tmp
-
-        if human_string != None:
-            r_human_list = human_string.split('#')
-        else:
-            return_list : list[str] = []
-
-            for human in l_human_list:
-                h_nd_near = human.split('$') # [(Lady/Lord # Symbol OR a Lady/Lord)] OR [(Lady/Lord # Symbol OR a Lady/Lord), NearObjIdentity]
-                return_list.append(h_nd_near[0])
-            
-            if len(return_list) == 1:
-                result_a = f"there was {return_list[0]}"
-            else:
-                joined_return_list = ", ".join(return_list[0:-1])
-                joined_return_list = ", and ".join([joined_return_list, return_list[-1]])
-                
-                if l_same and l_standing:
-                    result_a = " ".join(["there was a procession or journey including", joined_return_list])
-                if not l_same and l_standing:
-                    result_a = " ".join(["there was a gathering including", joined_return_list])
-
-                result_a = " ".join(["there were", joined_return_list])
-
-            if tail_bit == 0: # Obj_tail without second Clause_f+
-                return " near a(n) ".join([result_a, obj_string])
-            else: # Date_tail without a second Clause_f+
-                return " ".join([result_a, date_string]) # simply join the result_a with the date string, since Date formats itself.
-        
-        r_human_list : list[str] = human_string.split("#")
+            if tail_bit == 1: # Clause has a Date_tail
+                tmp = obj_string
+                obj_string = date_string
+                date_string = tmp
 
         check_for_date = lambda result_string : result_string if date_string == None else " ".join([date_string, result_string])
         check_for_obj = lambda result_string : result_string if obj_string == None else " ".join([result_string, "near a", obj_string])
         check_date_obj = lambda result_string : check_for_obj(check_for_date(result_string))
 
-        # one figure on either side.
-        if len(l_human_list) == 1 and len(r_human_list) == 1:
-            l_pose = l_pose_list[0]
-            l_orientation = l_orientation_list[0]
-            l_gender = l_gender_list[0]
-            l_human = l_human_list[0]
-            
-            r_pose = r_pose_list[0]
-            r_orientation = r_orientation_list[0]
-            r_gender = r_gender_list[0]
-            r_human = r_human_list[0]
-
+        def handle_two_human_figures(
+            l_pose : int,
+            l_orientation: int,
+            l_gender : int, 
+            l_human : str,
+            r_pose : int,
+            r_orientation : int,
+            r_gender : int,
+            r_human : str
+        ):
             # These have the form [Lord/Lady # Symbol, NearObjIdentity]
             l_name_near_obj = l_human.split('$')
             r_name_near_obj = r_human.split('$')
-
             
             # the figures are facing the same direction
             if l_orientation == r_orientation:
@@ -241,7 +184,7 @@ class Clause(TreeNode):
                     result_a = " ".join([stander[0], "consulted", sitter[0]])
 
                 return check_date_obj(result_a)
-
+            
             # At this point, the two figures are either both sitting or both standing in addition to facing one
             # another. 
 
@@ -264,10 +207,88 @@ class Clause(TreeNode):
             # Catch all return case to prevent fall through to other if statements. It is known that two humans are standing and facing
             # one another in this sentence, and that neither of them holds a weapon, shield or sacrificed animal. Simply say they  met. 
             return check_date_obj(" ".join([l_name_near_obj[0], "met", r_name_near_obj[0]]))
-                
-        # one to many or many to one
+        
+        if human_string != None:
+            r_human_list = human_string.split('#')
+        else: # no human_string means there is either no tail, or the tail is just a Date or obj
+            return_list : list[str] = []
+            
+            if len(l_human_list) == 1:
+                result_a = f"there was {l_human_list[0].split('$')[0]}"
+            
+            elif len(l_human_list) == 2:
+                return handle_two_human_figures(
+                    l_pose = l_pose_list[0],
+                    l_orientation = l_orientation_list[0],
+                    l_gender = l_gender_list[0],
+                    l_human = l_human_list[0],
+                    r_pose = l_pose_list[1],
+                    r_orientation = l_orientation_list[1],
+                    r_gender = l_gender_list[1],
+                    r_human = l_human_list[1]
+                )
 
-        # many to many
+            else:
+                l_standing = True
+                l_same = True
+                direction = None
+                
+                for l in l_pose_list:
+                    if l == 0:
+                        l_standing = False
+
+                for dir in l_orientation_list:
+                    if direction == None:
+                        direction = dir
+                    else:
+                        if dir != direction:
+                            l_same = False
+                            break 
+
+                for human in l_human_list:
+                    h_nd_near = human.split('$') # [(Lady/Lord # Symbol OR a Lady/Lord)] OR [(Lady/Lord # Symbol OR a Lady/Lord), NearObjIdentity]
+                    return_list.append(h_nd_near[0])
+
+                joined_return_list = ", ".join(return_list[0:-1])
+                joined_return_list = ", and ".join([joined_return_list, return_list[-1]])
+                
+                if l_same and l_standing:
+                    result_a = " ".join(["there was a procession or journey including", joined_return_list])
+                if not l_same and l_standing:
+                    result_a = " ".join(["there was a gathering including", joined_return_list])
+
+                result_a = " ".join(["there were", joined_return_list])
+
+            # if there really is tail, then there is either an obj associated with the clause or date. Figure out which
+            # and annotate accordingly.
+            if real_tail != None:
+                if tail_bit == 0: # Obj_tail without second Clause_f+
+                    return " near a(n) ".join([result_a, obj_string])
+                else: # Date_tail without a second Clause_f+
+                    return " ".join([result_a, date_string]) # simply join the result_a with the date string, since Date formats itself.
+            
+            # Here, real_tail == None, so there really was no tail, and the interpretation of the one Clause_f sequence is returned.
+            return result_a
+        
+        r_human_list : list[str] = human_string.split("#")
+
+        # one figure on either side.
+        if len(l_human_list) == 1 and len(r_human_list) == 1:
+            return handle_two_human_figures(
+                l_pose = l_pose_list[0],
+                l_orientation = l_orientation_list[0],
+                l_gender = l_gender_list[0],
+                l_human = l_human_list[0],
+                
+                r_pose = r_pose_list[0],
+                r_orientation = r_orientation_list[0],
+                r_gender = r_gender_list[0],
+                r_human = r_human_list[0],
+            )
+
+        # one to many or many to one TODO
+
+        # many to many TODO
 
         # ERROR: NO INTERPRETATION MATCHES
         return "<ERROR: Clause is in grammar but no interpretation exists for it.>"
@@ -278,7 +299,7 @@ class DateTail(TreeNode):
     
     # TODO: Check that returning a tuple like this doesn't break the interface.
     def interpret(self) -> tuple[str, list[int], list[int]]:
-        date_string : str = self.first_token.interpret()
+        date_string : str = self.children[0].interpret()
 
         if len(self.children) > 1:
             obj_string : str | None = None
@@ -294,10 +315,11 @@ class DateTail(TreeNode):
             r_gender_list : list[int] = []
             
             while i < len(self.children) and self.children[i].is_first_token_type(tokens.Human):
+                i_first_token = self.children[i].first_token
                 r_human_list.append(self.children[i].interpret())
-                r_pose_list.append(self.children[i].pose)
-                r_orientation_list.append(self.children[i].orientation)
-                r_gender_list.append(self.children[i].gender)
+                r_pose_list.append(i_first_token.pose)
+                r_orientation_list.append(i_first_token.orientation)
+                r_gender_list.append(i_first_token.gender)
 
                 i += 1 
     

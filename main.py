@@ -6,11 +6,11 @@ import interpreter
 
 def main():
     token_list : list[tokens.Token] = parser.construct_from_samples([
-        'year-5-house', 
         'lord-standing-right',
+        'year-5-house',
         'date-4-wind',
         'lady-sitting-left',
-        'date-10-serpent',
+        'date-10-serpent', 
         'end'
     ])
 
