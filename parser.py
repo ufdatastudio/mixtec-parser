@@ -200,7 +200,7 @@ def get_sample_tokens():
         'year-1-reed' : tokens.Year(0, 0, 'Reed', 1),
         'year-5-house' : tokens.Year(0,0,'House', 5),
         'year-13-rabbit' : tokens.Year(0,0, 'Rabbit', 13),
-        'date-4-wind' : tokens.NameDate(0,0, 'Wind', 1),
+        'date-4-wind' : tokens.NameDate(0,0, 'Wind', 4),
         'date-6-death' : tokens.NameDate(0,0, 'Death', 6),
         'date-3-flint' : tokens.NameDate(0,0,'Flint', 3),
         'date-10-serpent' : tokens.NameDate(0,0,'Serpent',10),
