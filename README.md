@@ -1,8 +1,8 @@
 # Mixtec Parser
 
-This repo contains a parser and interpreter for a limited Mixtec grammar.
+This repo contains a parser and interpreter for a limited grammar intended for Mixtec codices.
 
-## The grammar is as follows:
+## Context Free Grammar (CFG):
 
     S = (Sent end)+
     Sent = Clause | obj (Date Clause | Clause) | Date (obj Clause | Clause)

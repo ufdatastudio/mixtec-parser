@@ -37,7 +37,7 @@ class Year(Token):
     def interpret(self) -> str:
         return f'{self.number} {self.symbol}' # # Symbol
 
-# TODO: Consider adding am additional level to the hierarchy from which Year and NameDate both inherit.
+# TODO: Consider adding an additional level to the hierarchy from which Year and NameDate both inherit.
 # Currently no advantage, so not implemented despite the fact they have the same set of attributes
 class NameDate(Token):
     def __init__(self, x, y, symbol, number):
@@ -69,7 +69,7 @@ class End(Token):
     def __init__(self, x, y, sent_id):
         super().__init__(x, y) # set x and y of ABC to -1.
         self.sent_id = sent_id
-        self.verbose = True
+        self.verbose = False
     
     def interpret(self) -> str:
         if self.verbose:
