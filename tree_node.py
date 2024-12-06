@@ -347,18 +347,21 @@ class ObjTail(TreeNode):
             date_string : str | None = None
             i : int = 1
             
-            if self.children[1].is_first_token_type(tokens.Obj):
+            if self.children[1].is_first_token_type(tokens.Year):
                 date_string = self.children[1].interpret()
                 i += 1
 
             r_human_list = []
             r_pose_list : list[int] = []
             r_orientation_list : list[int] = []
+            r_gender_list : list[int] = []
 
-            while self.children[i].is_first_token_type(tokens.Human):
+            while i < len(self.children) and self.children[i].is_first_token_type(tokens.Human):
+                i_first_token = self.children[i].first_token
                 r_human_list.append(self.children[i].interpret())
-                r_pose_list.append(self.children[i].pose)
-                r_orientation_list.append(self.children[i].orientation)
+                r_pose_list.append(i_first_token.pose)
+                r_orientation_list.append(i_first_token.orientation)
+                r_gender_list.append(i_first_token.gender)
 
                 i += 1 
     
@@ -367,12 +370,12 @@ class ObjTail(TreeNode):
             # Note that, according to the grammar, it's not actually possible
             # for the human_string to be empty.
             if date_string == None:
-                return "@".join([obj_string, human_string]), r_pose_list, r_orientation_list
+                return "@".join([obj_string, human_string]), r_pose_list, r_orientation_list, r_gender_list
             else:
-                return "@".join(obj_string, date_string, human_string), r_pose_list, r_orientation_list
+                return "@".join(obj_string, date_string, human_string), r_pose_list, r_orientation_list, r_gender_list
 
         else:
-            return obj_string
+            return obj_string, [], [], []
 
 class Date(TreeNode):
     def __init__(self, first_token, children = None):

@@ -8,8 +8,9 @@ def main():
     token_list : list[tokens.Token] = parser.construct_from_samples([
         
         'year-5-house',
-        'lord-standing-right',
+        'lord-sitting-right',
         'date-4-wind',
+        'house',
         'lady-sitting-left',
         'date-10-serpent', 
         'end',
