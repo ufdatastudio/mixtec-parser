@@ -209,7 +209,7 @@ def get_sample_tokens():
         'weapon' : tokens.NearObj(0,0, 'weapon'),
         'shield' : tokens.NearObj(0,0, "shield"),
         'throne' : tokens.NearObj(0,0, "throne"),
-        'sacrificed_animal': tokens.NearObj(0,0, "sacrificed_animal"),
+        'sacrificed-animal': tokens.NearObj(0,0, "sacrificed_animal"),
         'incense' : tokens.Obj(0,0, 'incense'),
         'river' : tokens.Obj(0,0,'river'),
         'water' : tokens.Obj(0,0, 'water'),

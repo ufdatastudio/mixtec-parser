@@ -417,9 +417,9 @@ class ClauseF(TreeNode):
                 # associated with the parent h token after it. Handle
                 # accordingly.
                 if len(nd_near_obj) == 2:
-                    return "$".join(f'{h_string} {nd_near_obj[1]}',f'{nd_near_obj[0]}') # Lord/Lady # Symbol$NearObjIdentity 
+                    return "$".join([f'{h_string} {nd_near_obj[1]}',f'{nd_near_obj[0]}']) # Lord/Lady # Symbol$NearObjIdentity 
                 else:
-                    return "$".join(f'a {h_string}',f'{nd_near_obj[0]}') # a Lord/Lady$NearObjIdentity
+                    return "$".join([f'a {h_string}',f'{nd_near_obj[0]}']) # a Lord/Lady$NearObjIdentity
         
         else:
             # h is alone, without a tail. Corresponds to nameless person not associated with a near_obj token.
