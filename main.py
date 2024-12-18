@@ -32,9 +32,8 @@ def test2():
         'lord-sitting-right',
         'date-4-wind',
         'house',
-        'lord-standing-left',
-        'shield',
-        'date-6-death', 
+        'lady-sitting-left',
+        'date-10-serpent', 
         'end',
     ])
 

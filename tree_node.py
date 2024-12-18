@@ -50,7 +50,7 @@ class Sent(TreeNode):
         if self.is_first_token_type(tokens.Obj) or self.is_first_token_type(tokens.Year):
             sentence_list.append(self.children[0].interpret()) # obj || Date
             
-            if len(self.children) > 2:
+            if len(self.children) > 2: # TODO: handle specific objects differently
                 sentence_list.append(self.children[1].interpret()) # Date || obj
                 sentence_list.append(self.children[2].interpret()) # Clause || Clause
             else:
