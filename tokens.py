@@ -1,15 +1,13 @@
 # CWDE615
 # file for a hierarchy of token types
-from tree_node import TreeNode
 
 # ABC for the token classes, which act more like structs, since they have no methods in the current design.
-class Token(TreeNode):
-    def __init__(self, x, y):
-        super().__init__(None, None) # sets first_token to None and children to []
-        self.x = x
-        self.y = y
-        self.children = None # overwrite children to None, signaling that this is a leaf in the AST.
-        self.first_token = self
+class Token:
+    def __init__(self, *args, **kwargs):
+        from tree_node import TreeNode  # Lazy import to break circular import
+        self.__class__ = type(self.__class__.__name__, (TreeNode,), dict(self.__class__.__dict__))
+        super().__init__(*args, **kwargs)
+
         
 class Human(Token):
     def __init__(self, x, y, gender, pose, orientation):

@@ -1,0 +1,13 @@
+H=1
+Y=2
+ND=3
+OBJ=4
+NEAR_OBJ=5
+END=6
+WS=7
+'h'=1
+'y'=2
+'nd'=3
+'obj'=4
+'near_obj'=5
+'end'=6

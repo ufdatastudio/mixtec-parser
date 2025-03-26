@@ -10,3 +10,8 @@ class Interpreter():
 
     def __call__(self, root : tree_node.Start) -> str:
         return self.interpret(root)
+    
+    
+def run_interpreter(tree):
+    # Fallback placeholder — returns raw tree string
+    return tree.toStringTree()
