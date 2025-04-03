@@ -1,17 +1,22 @@
-# gabrielayoubi03
-# Implements a visitor-based interpreter for the ANTLR-generated parse tree (SceneParser)
-# This class walks the parse tree and builds a nested dictionary representing the scene semantics
 
+# scene_interpreter_visitor.py
+# XML-based visitor interpreter for ANTLR-generated parse trees
+# Parses token XML using ElementTree and returns structured representations
+
+import xml.etree.ElementTree as ET
 from antlr4 import *
 from SceneParser import SceneParser
-from SceneVisitor import SceneVisitor  # ANTLR-generated base class
+from SceneVisitor import SceneVisitor
+
+# Helper function to parse an XML string into a flat dictionary
+def parse_token_xml(xml_str: str) -> dict:
+    root = ET.fromstring(xml_str)
+    return {child.tag: child.text for child in root}
 
 class SceneInterpreterVisitor(SceneVisitor):
-    # Entry point: visit the root rule 's' which consists of one or more 'sent' entries
     def visitS(self, ctx:SceneParser.SContext):
         return [self.visit(sent) for sent in ctx.sent()]
 
-    # Visit a sentence (sent) which could be a clause, or involve an object and/or date
     def visitSent(self, ctx:SceneParser.SentContext):
         if ctx.clause():
             return self.visit(ctx.clause())
@@ -19,14 +24,14 @@ class SceneInterpreterVisitor(SceneVisitor):
             if ctx.date():
                 return {
                     "type": "obj-date-clause",
-                    "obj": ctx.OBJ().getText(),
+                    "obj": parse_token_xml(ctx.OBJ().getText()),
                     "date": self.visit(ctx.date()),
                     "clause": self.visit(ctx.clause())
                 }
             else:
                 return {
                     "type": "obj-clause",
-                    "obj": ctx.OBJ().getText(),
+                    "obj": parse_token_xml(ctx.OBJ().getText()),
                     "clause": self.visit(ctx.clause())
                 }
         elif ctx.date():
@@ -34,7 +39,7 @@ class SceneInterpreterVisitor(SceneVisitor):
                 return {
                     "type": "date-obj-clause",
                     "date": self.visit(ctx.date()),
-                    "obj": ctx.OBJ().getText(),
+                    "obj": parse_token_xml(ctx.OBJ().getText()),
                     "clause": self.visit(ctx.clause())
                 }
             else:
@@ -44,7 +49,6 @@ class SceneInterpreterVisitor(SceneVisitor):
                     "clause": self.visit(ctx.clause())
                 }
 
-    # Visit a clause: one or more humans, optionally followed by a date_tail or obj_tail
     def visitClause(self, ctx:SceneParser.ClauseContext):
         clause_fs = [self.visit(cf) for cf in ctx.clause_f()]
         result = {"type": "clause", "elements": clause_fs}
@@ -54,28 +58,25 @@ class SceneInterpreterVisitor(SceneVisitor):
             result["tail"] = self.visit(ctx.obj_tail())
         return result
 
-    # Visit a simple human clause feature (clause_f), optionally with a date or near object
     def visitClause_f(self, ctx:SceneParser.Clause_fContext):
-        base = {"type": "h"}
+        data = {"type": "h", **parse_token_xml(ctx.H().getText())}
         if ctx.ND():
-            base["nd"] = ctx.ND().getText()
+            data["namedate"] = parse_token_xml(ctx.ND().getText())
         elif ctx.near_date():
-            base["near_date"] = self.visit(ctx.near_date())
-        return base
+            data["near_date"] = self.visit(ctx.near_date())
+        return data
 
-    # Visit a date_tail which includes a date, and may optionally include obj + human(s)
     def visitDate_tail(self, ctx:SceneParser.Date_tailContext):
         data = {"type": "date_tail", "date": self.visit(ctx.date())}
         clause_fs = [self.visit(cf) for cf in ctx.clause_f()]
         if ctx.OBJ():
-            data["obj"] = ctx.OBJ().getText()
+            data["obj"] = parse_token_xml(ctx.OBJ().getText())
         if clause_fs:
             data["clauses"] = clause_fs
         return data
 
-    # Visit an obj_tail which includes obj, and optionally a date and human(s)
     def visitObj_tail(self, ctx:SceneParser.Obj_tailContext):
-        data = {"type": "obj_tail", "obj": ctx.OBJ().getText()}
+        data = {"type": "obj_tail", "obj": parse_token_xml(ctx.OBJ().getText())}
         if ctx.date():
             data["date"] = self.visit(ctx.date())
         clause_fs = [self.visit(cf) for cf in ctx.clause_f()]
@@ -83,16 +84,14 @@ class SceneInterpreterVisitor(SceneVisitor):
             data["clauses"] = clause_fs
         return data
 
-    # Visit a date token: 'y' followed by optional 'nd' (name-date)
     def visitDate(self, ctx:SceneParser.DateContext):
-        data = {"type": "date", "y": ctx.Y().getText()}
+        data = {"type": "date", **parse_token_xml(ctx.Y().getText())}
         if ctx.ND():
-            data["nd"] = ctx.ND().getText()
+            data["namedate"] = parse_token_xml(ctx.ND().getText())
         return data
 
-    # Visit a near_date token: 'near_obj' optionally followed by 'nd'
     def visitNear_date(self, ctx:SceneParser.Near_dateContext):
-        data = {"type": "near_obj", "value": ctx.NEAR_OBJ().getText()}
+        data = {"type": "near_obj", **parse_token_xml(ctx.NEAR_OBJ().getText())}
         if ctx.ND():
-            data["nd"] = ctx.ND().getText()
+            data["namedate"] = parse_token_xml(ctx.ND().getText())
         return data

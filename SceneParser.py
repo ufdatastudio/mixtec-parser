@@ -52,8 +52,8 @@ class SceneParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'h'", "'y'", "'nd'", "'obj'", "'near_obj'", 
-                     "'end'" ]
+    literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "<INVALID>", "'<End/>'" ]
 
     symbolicNames = [ "<INVALID>", "H", "Y", "ND", "OBJ", "NEAR_OBJ", "END", 
                       "WS" ]

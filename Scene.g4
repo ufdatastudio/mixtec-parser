@@ -15,11 +15,12 @@ date    : Y ND? ;
 clause_f: H (ND | near_date)? ;
 near_date : NEAR_OBJ ND? ;
 
-H        : 'h' ;
-Y        : 'y' ;
-ND       : 'nd' ;
-OBJ      : 'obj' ;
-NEAR_OBJ : 'near_obj' ;
-END      : 'end' ;
+// Lexer rules: match full XML blocks as single tokens
+H        : '<Human>' .*? '</Human>' ;
+Y        : '<Year>' .*? '</Year>' ;
+ND       : '<NameDate>' .*? '</NameDate>' ;
+OBJ      : '<Obj>' .*? '</Obj>' ;
+NEAR_OBJ : '<NearObj>' .*? '</NearObj>' ;
+END      : '<End/>' ;
 
-WS : [ \t\r\n]+ -> skip ;
+WS : [ \\t\\r\\n]+ -> skip ;
