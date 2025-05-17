@@ -48,14 +48,16 @@ class Sent(TreeNode):
             return self.children[0].interpret() # Clause
        
         if self.is_first_token_type(tokens.Obj) or self.is_first_token_type(tokens.Year):
-            sentence_list.append(self.children[0].interpret()) # obj || Date
+            first_part = self.children[0].interpret().split()      # obj || Date
+            capitalized_first_word = first_part[0].capitalize()
+            sentence_list.append(" ".join([capitalized_first_word] + first_part[1:]))
             
             if len(self.children) > 2: # TODO: handle specific objects differently
                 sentence_list.append(self.children[1].interpret()) # Date || obj
                 sentence_list.append(self.children[2].interpret()) # Clause || Clause
             else:
                 sentence_list.append(self.children[1].interpret()) # Clause || Clause
-            
+        
         return " ".join(sentence_list)
 
 class Clause(TreeNode):
