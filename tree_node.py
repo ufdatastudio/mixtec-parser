@@ -442,7 +442,7 @@ class NearDate(TreeNode):
             return near_obj_string
             
 class LeafNode(TreeNode):
-    def __init__(self, token: tokens.Token):
+    def __init__(self, token: "Token"):
         super().__init__(token, children=None)
 
     def interpret(self) -> str:
