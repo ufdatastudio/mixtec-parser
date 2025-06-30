@@ -441,4 +441,15 @@ class NearDate(TreeNode):
         else:
             return near_obj_string
             
+class LeafNode(TreeNode):
+    def __init__(self, token: tokens.Token):
+        super().__init__(token, children=None)
+
+    def interpret(self) -> str:
+        # For leaf nodes, interpretation is just the token's interpretation
+        return self.first_token.interpret()
+
+    def to_xml(self) -> str:
+        return self.first_token.to_xml()
+            
     

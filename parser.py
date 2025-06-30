@@ -2,6 +2,7 @@
 # Parser for a limited Mixtec Grammar. Check the README for this grammar.
 import tokens
 import tree_node
+from tree_node import LeafNode
 
 class Parser():
 
@@ -34,7 +35,8 @@ class Parser():
         return self.tks[-1]
     
     def consume_next_token(self, c : list[tree_node.TreeNode], exp : type):
-        c.append(self.tks[-1])
+        token = self.tks[-1]
+        c.append(LeafNode(token))
         self.consume(exp)
 
     # RECURSIVE DESCENT METHODS

@@ -2,6 +2,7 @@
 # Interpreter for the parser in parser.py. Check the README for the limit Mixtec Grammar interpreted into text.
 
 import tree_node
+#TODO: Add a new interpreter that interprets the XML into natural language. We are currently just transcribing the XML from the tokens.
 
 class Interpreter():
     
