@@ -7,8 +7,8 @@
     that reflects the grammar rules defined for Mixtec scenes.
     Check the README for this grammar.
 """
-import tokens
-import tree_node
+import tokens as tokens
+import tree_node as tree_node
 from tree_node import LeafNode
 
 class Parser():

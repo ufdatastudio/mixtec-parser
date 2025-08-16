@@ -1,0 +1,12 @@
+Y=1
+H=2
+ND=3
+OBJ=4
+NEAR_OBJ=5
+END=6
+WS=7
+XML_DECL=8
+SCENE_OPEN=9
+SCENE_CLOSE=10
+'<scene>'=9
+'</scene>'=10

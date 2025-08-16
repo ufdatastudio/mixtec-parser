@@ -56,24 +56,22 @@ near_date : NEAR_OBJ ND? ;
 // Each lexer rule matches a complete XML tag and captures it as a single token.
 // --------------
 
-// Match an entire <Human>...</Human> block. This includes the opening and closing tags, and anything inside.
-H : '<Human>' .*? '</Human>' ;
+// Lexer rules to match each full tag as a single token
 
-// Match an entire <Year>...</Year> block. Represents a year glyph in the codex.
-Y : '<Year>' .*? '</Year>' ;
-
-// Match an entire <NameDate>...</NameDate> block. Represents a name or calendrical date.
-ND : '<NameDate>' .*? '</NameDate>' ;
-
-// Match an entire <Obj>...</Obj> block. Represents general objects.
-OBJ : '<Obj>' .*? '</Obj>' ;
-
-// Match an entire <NearObj>...</NearObj> block.
-NEAR_OBJ : '<NearObj>' .*? '</NearObj>' ;
-
-// Match the self-closing <End/> tag, which marks the end of a sentence/scene.
-END : '<End/>' ;
+Y        : '<year'     .*? '/>' ;        // Matches <year ... />
+H        : '<human'    .*? '/>' ;        // Matches <human ... />
+ND       : '<name_date' .*? '/>' ;       // Matches <name_date ... />
+OBJ      : '<obj'      .*? '/>' ;        // Matches <obj ... />
+NEAR_OBJ : '<near_obj' .*? '/>' ;        // Matches <near_obj ... />
+END      : '<end'      .*? '/>' ;        // Matches <end ... />
 
 // Match and skip any whitespace characters: spaces, tabs, carriage returns, and newlines.
 // These are ignored by the parser and do not generate tokens.
-WS : [ \\t\\r\\n]+ -> skip ;
+WS       : [ \t\r\n]+ -> skip ;          // Skip whitespace
+
+
+// Lexer rules for tags that should be ignored
+
+XML_DECL : '<?xml' .*? '?>' -> skip ;   // Ignore XML declaration
+SCENE_OPEN : '<scene>' -> skip ;        // Ignore <scene>
+SCENE_CLOSE : '</scene>' -> skip ;      // Ignore </scene>

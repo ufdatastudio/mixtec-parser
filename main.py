@@ -1,82 +1,85 @@
-# CWDE615
-# file containing the main function and entry point for the the Mixtec Parser and interpreter.
-import parser
-import tokens
-import interpreter
+# --------------------------------------------
+# Command-line tool for parsing and interpreting Mixtec codex scenes.
+# Supports both visitor-based and legacy interpretation modes.
+# Usage:
+#   python antlr_main.py "<Year>...</Year> <Human>...</Human> <End/>"
+#   python antlr_main.py input.txt
+#   python antlr_main.py input.txt --visitor
+# --------------------------------------------
 
-def run_list(token_list : list[tokens.Token]):
-    par = parser.Parser()
-    ast = par(token_list)
-    inter = interpreter.Interpreter()
-    txt = inter(ast)
+import sys
+import argparse
 
-    return txt
+# Import ANTLR4 runtime and generated lexer/parser classes
+from antlr4 import *
+from antlr.SceneInterpreterVisitor import SceneInterpreterVisitor
+from antlr.SceneLexer import SceneLexer     # Tokenizes input stream based on lexer rules in Scene.g4
+from antlr.SceneParser import SceneParser   # Parses token stream into a parse tree using Scene.g4
+from antlr.TokenConvertor import TokenConvertor   
 
-def test1():
-    token_list : list[tokens.Token] = parser.construct_from_samples([
-        
-        'year-5-house',
-        'lord-standing-right',
-        'date-4-wind',
-        'lady-sitting-left',
-        'date-10-serpent', 
-        'end',
-    ])
+import tokens as tokens   
+# pyright: reportShadowedImports=false
+import recursive_descent.parser as p
+import recursive_descent.interpreter as interpreter         
 
-    return run_list(token_list)
+def parseScene() -> str:
+    # Setup command-line arguments
+    parser = argparse.ArgumentParser(description="Scene parser and interpreter")
+    
+    # Accepts a single optional input argument (can be a file path or direct string)
+    parser.add_argument("input", nargs="?", default=None, help="Input string or file")
+    
+    # Optional flag: use recursive descent parser
+    parser.add_argument("-rd", "--recursiveDescent", action="store_true", help="Use recursive descent parser")
+    
+    args = parser.parse_args()
 
-def test2():
-    token_list : list[tokens.Token] = parser.construct_from_samples([
-        
-        'year-5-house',
-        'lord-sitting-right',
-        'date-4-wind',
-        'house',
-        'lady-sitting-left',
-        'date-10-serpent', 
-        'end',
-    ])
+    # -------------
+    # Load input
+    # -------------
+    if args.input is None:
+        # If no argument provided, read from standard input (e.g., via piping)
+        input_stream = InputStream(sys.stdin.read())
+    else:
+        try:
+            # Try to open the input as a file path
+            with open(args.input, 'r') as f:
+                input_stream = InputStream(f.read())
+        except FileNotFoundError:
+            # If the file doesn't exist, treat it as a raw string
+            input_stream = InputStream(args.input)
 
-    return run_list(token_list)
+    # -------------
+    # Lexing and Parsing
+    # -------------
+    lexer = SceneLexer(input_stream)                      # Convert raw input to tokens
+    token_stream = CommonTokenStream(lexer)               # Stream tokens for the parser 
+    token_stream.fill()                                   # Tokenize the full input now
 
-def test3():
-    token_list : list[tokens.Token] = parser.construct_from_samples([
-        
-        'year-5-house',
-        'lord-standing-right',
-        'sacrificed-animal',
-        'date-4-wind',
-        'lord-standing-left',
-        'date-6-death', 
-        'end',
-    ])
+    # -------------
+    # Interpretation
+    # -------------
+    if args.recursiveDescent:
+        print("Using Recursive Descent parser")
+        # If --recursiveDescent flag is passed, use the recursive descent parser
+        token_list : list[tokens.Token] = []
+        for token in token_stream.tokens[:-1]:
+            token_list.append(TokenConvertor.convert_token(token))
 
-    return run_list(token_list)
+        par = p.Parser()
+        ast = par(token_list)
+        inter = interpreter.Interpreter()
+        text = inter(ast)
+        return text
 
-def test4():
-    token_list : list[tokens.Token] = parser.construct_from_samples([
-        
-        'year-5-house',
-        'lord-standing-right',
-        'weapon',
-        'date-4-wind',
-        'lord-standing-left',
-        'shield',
-        'date-6-death', 
-        'end',
-    ])
+    else:
+        # Default: Use the Antlr Parser
+        print("Using Antlr parser")
+        parser = SceneParser(token_stream)                    # Parse tokens into a parse tree
+        tree = parser.s()                                     # Start parsing from the root rule `s`
+        visitor = SceneInterpreterVisitor()
+        text = visitor.visit(tree)                      # Recursively walk parse tree and interpret
+        return text
 
-    return run_list(token_list)
-
-
-def main():
-    print(f'test 1: {test1()}')
-    print(f'test 2: {test2()}')
-    print(f'test 3: {test3()}')
-    print(f'test 4: {test4()}')
-
-
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    print(parseScene())

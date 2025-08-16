@@ -1,5 +1,5 @@
 # CWDE615
-import tree_node
+import tree_node as tree_node
 #TODO: Add a new interpreter that interprets the XML into natural language. We are currently just transcribing the XML from the tokens.
 
 class Interpreter():

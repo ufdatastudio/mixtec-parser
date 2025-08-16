@@ -174,3 +174,8 @@ cython_debug/
 .DS_Store
 
 Sample.txt
+antlr-4.9.3-complete.jar
+.vscode/settings.json
+
+/.vscode
+/antlr/antlr-4.9.3-complete.jar

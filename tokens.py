@@ -2,14 +2,12 @@
 # file for a hierarchy of token types
 
 from __future__ import annotations
-from tree_node import TreeNode
 
 # ABC for the token classes, which act more like structs, since they have no methods in the current design.
 class Token:
     def __init__(self, x, y, *args, **kwargs):
         self.x = x
         self.y = y
-
         
 class Human(Token):
     def __init__(self, x, y, gender, pose, orientation):

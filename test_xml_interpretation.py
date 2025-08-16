@@ -5,10 +5,10 @@ This file tests that the to_xml() methods are working correctly and that
 the parser can interpret tokens by generating XML output.
 """
 
-import tokens
-import parser
-import tree_node
-from interpreter import Interpreter
+import tokens as tokens
+import recursive_descent.parser as parser
+import tree_node as tree_node
+from recursive_descent.interpreter import Interpreter
 
 def get_sample_tokens():
     """Get sample tokens for testing"""

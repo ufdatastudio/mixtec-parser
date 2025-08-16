@@ -1,4 +1,4 @@
-# Generated from Scene.g4 by ANTLR 4.13.2
+# Generated from Scene.g4 by ANTLR 4.9.3
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
@@ -8,39 +8,43 @@ if sys.version_info[1] > 5:
 else:
 	from typing.io import TextIO
 
+
 def serializedATN():
-    return [
-        4,1,7,90,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,
-        2,7,7,7,1,0,1,0,1,0,4,0,20,8,0,11,0,12,0,21,1,1,1,1,1,1,1,1,1,1,
-        1,1,3,1,30,8,1,1,1,1,1,1,1,1,1,3,1,36,8,1,3,1,38,8,1,1,2,4,2,41,
-        8,2,11,2,12,2,42,1,2,1,2,3,2,47,8,2,1,3,1,3,1,3,4,3,52,8,3,11,3,
-        12,3,53,1,3,4,3,57,8,3,11,3,12,3,58,3,3,61,8,3,1,4,1,4,1,4,4,4,66,
-        8,4,11,4,12,4,67,1,4,4,4,71,8,4,11,4,12,4,72,3,4,75,8,4,1,5,1,5,
-        3,5,79,8,5,1,6,1,6,1,6,3,6,84,8,6,1,7,1,7,3,7,88,8,7,1,7,0,0,8,0,
-        2,4,6,8,10,12,14,0,0,101,0,19,1,0,0,0,2,37,1,0,0,0,4,40,1,0,0,0,
-        6,48,1,0,0,0,8,62,1,0,0,0,10,76,1,0,0,0,12,80,1,0,0,0,14,85,1,0,
-        0,0,16,17,3,2,1,0,17,18,5,6,0,0,18,20,1,0,0,0,19,16,1,0,0,0,20,21,
-        1,0,0,0,21,19,1,0,0,0,21,22,1,0,0,0,22,1,1,0,0,0,23,38,3,4,2,0,24,
-        29,5,4,0,0,25,26,3,10,5,0,26,27,3,4,2,0,27,30,1,0,0,0,28,30,3,4,
-        2,0,29,25,1,0,0,0,29,28,1,0,0,0,30,38,1,0,0,0,31,35,3,10,5,0,32,
-        33,5,4,0,0,33,36,3,4,2,0,34,36,3,4,2,0,35,32,1,0,0,0,35,34,1,0,0,
-        0,36,38,1,0,0,0,37,23,1,0,0,0,37,24,1,0,0,0,37,31,1,0,0,0,38,3,1,
-        0,0,0,39,41,3,12,6,0,40,39,1,0,0,0,41,42,1,0,0,0,42,40,1,0,0,0,42,
-        43,1,0,0,0,43,46,1,0,0,0,44,47,3,6,3,0,45,47,3,8,4,0,46,44,1,0,0,
-        0,46,45,1,0,0,0,46,47,1,0,0,0,47,5,1,0,0,0,48,60,3,10,5,0,49,51,
-        5,4,0,0,50,52,3,12,6,0,51,50,1,0,0,0,52,53,1,0,0,0,53,51,1,0,0,0,
-        53,54,1,0,0,0,54,61,1,0,0,0,55,57,3,12,6,0,56,55,1,0,0,0,57,58,1,
-        0,0,0,58,56,1,0,0,0,58,59,1,0,0,0,59,61,1,0,0,0,60,49,1,0,0,0,60,
-        56,1,0,0,0,60,61,1,0,0,0,61,7,1,0,0,0,62,74,5,4,0,0,63,65,3,10,5,
-        0,64,66,3,12,6,0,65,64,1,0,0,0,66,67,1,0,0,0,67,65,1,0,0,0,67,68,
-        1,0,0,0,68,75,1,0,0,0,69,71,3,12,6,0,70,69,1,0,0,0,71,72,1,0,0,0,
-        72,70,1,0,0,0,72,73,1,0,0,0,73,75,1,0,0,0,74,63,1,0,0,0,74,70,1,
-        0,0,0,74,75,1,0,0,0,75,9,1,0,0,0,76,78,5,2,0,0,77,79,5,3,0,0,78,
-        77,1,0,0,0,78,79,1,0,0,0,79,11,1,0,0,0,80,83,5,1,0,0,81,84,5,3,0,
-        0,82,84,3,14,7,0,83,81,1,0,0,0,83,82,1,0,0,0,83,84,1,0,0,0,84,13,
-        1,0,0,0,85,87,5,5,0,0,86,88,5,3,0,0,87,86,1,0,0,0,87,88,1,0,0,0,
-        88,15,1,0,0,0,15,21,29,35,37,42,46,53,58,60,67,72,74,78,83,87
-    ]
+    with StringIO() as buf:
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\f")
+        buf.write("\\\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
+        buf.write("\t\b\4\t\t\t\3\2\3\2\3\2\6\2\26\n\2\r\2\16\2\27\3\3\3")
+        buf.write("\3\3\3\3\3\3\3\3\3\5\3 \n\3\3\3\3\3\3\3\3\3\5\3&\n\3\5")
+        buf.write("\3(\n\3\3\4\6\4+\n\4\r\4\16\4,\3\4\3\4\5\4\61\n\4\3\5")
+        buf.write("\3\5\3\5\6\5\66\n\5\r\5\16\5\67\3\5\6\5;\n\5\r\5\16\5")
+        buf.write("<\5\5?\n\5\3\6\3\6\3\6\6\6D\n\6\r\6\16\6E\3\6\6\6I\n\6")
+        buf.write("\r\6\16\6J\5\6M\n\6\3\7\3\7\5\7Q\n\7\3\b\3\b\3\b\5\bV")
+        buf.write("\n\b\3\t\3\t\5\tZ\n\t\3\t\2\2\n\2\4\6\b\n\f\16\20\2\2")
+        buf.write("\2g\2\25\3\2\2\2\4\'\3\2\2\2\6*\3\2\2\2\b\62\3\2\2\2\n")
+        buf.write("@\3\2\2\2\fN\3\2\2\2\16R\3\2\2\2\20W\3\2\2\2\22\23\5\4")
+        buf.write("\3\2\23\24\7\b\2\2\24\26\3\2\2\2\25\22\3\2\2\2\26\27\3")
+        buf.write("\2\2\2\27\25\3\2\2\2\27\30\3\2\2\2\30\3\3\2\2\2\31(\5")
+        buf.write("\6\4\2\32\37\7\6\2\2\33\34\5\f\7\2\34\35\5\6\4\2\35 \3")
+        buf.write("\2\2\2\36 \5\6\4\2\37\33\3\2\2\2\37\36\3\2\2\2 (\3\2\2")
+        buf.write("\2!%\5\f\7\2\"#\7\6\2\2#&\5\6\4\2$&\5\6\4\2%\"\3\2\2\2")
+        buf.write("%$\3\2\2\2&(\3\2\2\2\'\31\3\2\2\2\'\32\3\2\2\2\'!\3\2")
+        buf.write("\2\2(\5\3\2\2\2)+\5\16\b\2*)\3\2\2\2+,\3\2\2\2,*\3\2\2")
+        buf.write("\2,-\3\2\2\2-\60\3\2\2\2.\61\5\b\5\2/\61\5\n\6\2\60.\3")
+        buf.write("\2\2\2\60/\3\2\2\2\60\61\3\2\2\2\61\7\3\2\2\2\62>\5\f")
+        buf.write("\7\2\63\65\7\6\2\2\64\66\5\16\b\2\65\64\3\2\2\2\66\67")
+        buf.write("\3\2\2\2\67\65\3\2\2\2\678\3\2\2\28?\3\2\2\29;\5\16\b")
+        buf.write("\2:9\3\2\2\2;<\3\2\2\2<:\3\2\2\2<=\3\2\2\2=?\3\2\2\2>")
+        buf.write("\63\3\2\2\2>:\3\2\2\2>?\3\2\2\2?\t\3\2\2\2@L\7\6\2\2A")
+        buf.write("C\5\f\7\2BD\5\16\b\2CB\3\2\2\2DE\3\2\2\2EC\3\2\2\2EF\3")
+        buf.write("\2\2\2FM\3\2\2\2GI\5\16\b\2HG\3\2\2\2IJ\3\2\2\2JH\3\2")
+        buf.write("\2\2JK\3\2\2\2KM\3\2\2\2LA\3\2\2\2LH\3\2\2\2LM\3\2\2\2")
+        buf.write("M\13\3\2\2\2NP\7\3\2\2OQ\7\5\2\2PO\3\2\2\2PQ\3\2\2\2Q")
+        buf.write("\r\3\2\2\2RU\7\4\2\2SV\7\5\2\2TV\5\20\t\2US\3\2\2\2UT")
+        buf.write("\3\2\2\2UV\3\2\2\2V\17\3\2\2\2WY\7\7\2\2XZ\7\5\2\2YX\3")
+        buf.write("\2\2\2YZ\3\2\2\2Z\21\3\2\2\2\21\27\37%\',\60\67<>EJLP")
+        buf.write("UY")
+        return buf.getvalue()
+
 
 class SceneParser ( Parser ):
 
@@ -53,10 +57,11 @@ class SceneParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "<INVALID>", "'<End/>'" ]
+                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
+                     "<INVALID>", "'<scene>'", "'</scene>'" ]
 
-    symbolicNames = [ "<INVALID>", "H", "Y", "ND", "OBJ", "NEAR_OBJ", "END", 
-                      "WS" ]
+    symbolicNames = [ "<INVALID>", "Y", "H", "ND", "OBJ", "NEAR_OBJ", "END", 
+                      "WS", "XML_DECL", "SCENE_OPEN", "SCENE_CLOSE" ]
 
     RULE_s = 0
     RULE_sent = 1
@@ -71,17 +76,20 @@ class SceneParser ( Parser ):
                    "clause_f", "near_date" ]
 
     EOF = Token.EOF
-    H=1
-    Y=2
+    Y=1
+    H=2
     ND=3
     OBJ=4
     NEAR_OBJ=5
     END=6
     WS=7
+    XML_DECL=8
+    SCENE_OPEN=9
+    SCENE_CLOSE=10
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.13.2")
+        self.checkVersion("4.9.3")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -146,7 +154,7 @@ class SceneParser ( Parser ):
                 self.state = 21 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & 22) != 0)):
+                if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SceneParser.Y) | (1 << SceneParser.H) | (1 << SceneParser.OBJ))) != 0)):
                     break
 
         except RecognitionException as re:
@@ -204,25 +212,25 @@ class SceneParser ( Parser ):
             self.state = 37
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [1]:
+            if token in [SceneParser.H]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 23
                 self.clause()
                 pass
-            elif token in [4]:
+            elif token in [SceneParser.OBJ]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 24
                 self.match(SceneParser.OBJ)
                 self.state = 29
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
-                if token in [2]:
+                if token in [SceneParser.Y]:
                     self.state = 25
                     self.date()
                     self.state = 26
                     self.clause()
                     pass
-                elif token in [1]:
+                elif token in [SceneParser.H]:
                     self.state = 28
                     self.clause()
                     pass
@@ -230,20 +238,20 @@ class SceneParser ( Parser ):
                     raise NoViableAltException(self)
 
                 pass
-            elif token in [2]:
+            elif token in [SceneParser.Y]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 31
                 self.date()
                 self.state = 35
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
-                if token in [4]:
+                if token in [SceneParser.OBJ]:
                     self.state = 32
                     self.match(SceneParser.OBJ)
                     self.state = 33
                     self.clause()
                     pass
-                elif token in [1]:
+                elif token in [SceneParser.H]:
                     self.state = 34
                     self.clause()
                     pass
@@ -321,21 +329,21 @@ class SceneParser ( Parser ):
                 self.state = 42 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                if not (_la==1):
+                if not (_la==SceneParser.H):
                     break
 
             self.state = 46
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [2]:
+            if token in [SceneParser.Y]:
                 self.state = 44
                 self.date_tail()
                 pass
-            elif token in [4]:
+            elif token in [SceneParser.OBJ]:
                 self.state = 45
                 self.obj_tail()
                 pass
-            elif token in [6]:
+            elif token in [SceneParser.END]:
                 pass
             else:
                 pass
@@ -401,7 +409,7 @@ class SceneParser ( Parser ):
             self.state = 60
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [4]:
+            if token in [SceneParser.OBJ]:
                 self.state = 49
                 self.match(SceneParser.OBJ)
                 self.state = 51 
@@ -413,11 +421,11 @@ class SceneParser ( Parser ):
                     self.state = 53 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not (_la==1):
+                    if not (_la==SceneParser.H):
                         break
 
                 pass
-            elif token in [1]:
+            elif token in [SceneParser.H]:
                 self.state = 56 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -427,11 +435,11 @@ class SceneParser ( Parser ):
                     self.state = 58 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not (_la==1):
+                    if not (_la==SceneParser.H):
                         break
 
                 pass
-            elif token in [6]:
+            elif token in [SceneParser.END]:
                 pass
             else:
                 pass
@@ -497,7 +505,7 @@ class SceneParser ( Parser ):
             self.state = 74
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [2]:
+            if token in [SceneParser.Y]:
                 self.state = 63
                 self.date()
                 self.state = 65 
@@ -509,11 +517,11 @@ class SceneParser ( Parser ):
                     self.state = 67 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not (_la==1):
+                    if not (_la==SceneParser.H):
                         break
 
                 pass
-            elif token in [1]:
+            elif token in [SceneParser.H]:
                 self.state = 70 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
@@ -523,11 +531,11 @@ class SceneParser ( Parser ):
                     self.state = 72 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
-                    if not (_la==1):
+                    if not (_la==SceneParser.H):
                         break
 
                 pass
-            elif token in [6]:
+            elif token in [SceneParser.END]:
                 pass
             else:
                 pass
@@ -585,7 +593,7 @@ class SceneParser ( Parser ):
             self.state = 78
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==3:
+            if _la==SceneParser.ND:
                 self.state = 77
                 self.match(SceneParser.ND)
 
@@ -647,15 +655,15 @@ class SceneParser ( Parser ):
             self.state = 83
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [3]:
+            if token in [SceneParser.ND]:
                 self.state = 81
                 self.match(SceneParser.ND)
                 pass
-            elif token in [5]:
+            elif token in [SceneParser.NEAR_OBJ]:
                 self.state = 82
                 self.near_date()
                 pass
-            elif token in [1, 2, 4, 6]:
+            elif token in [SceneParser.Y, SceneParser.H, SceneParser.OBJ, SceneParser.END]:
                 pass
             else:
                 pass
@@ -713,7 +721,7 @@ class SceneParser ( Parser ):
             self.state = 87
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==3:
+            if _la==SceneParser.ND:
                 self.state = 86
                 self.match(SceneParser.ND)
 
