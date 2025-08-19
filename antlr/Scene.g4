@@ -11,7 +11,7 @@ grammar Scene;
 // --------------
 
 // Entry point of the parser: a full scene is made up of one or more complete sentences (sent), each ending in <End/>
-s       : (sent END)+ ;
+s       : XML_DECL (SCENE_OPEN sent SCENE_CLOSE)+ ;
 
 // A sentence can take three valid forms, according to the grammar:
 // 1. A standalone clause
@@ -63,7 +63,7 @@ H        : '<human'    .*? '/>' ;        // Matches <human ... />
 ND       : '<name_date' .*? '/>' ;       // Matches <name_date ... />
 OBJ      : '<obj'      .*? '/>' ;        // Matches <obj ... />
 NEAR_OBJ : '<near_obj' .*? '/>' ;        // Matches <near_obj ... />
-END      : '<end'      .*? '/>' ;        // Matches <end ... />
+// END      : '<end'      .*? '/>' ;        // Matches <end ... />
 
 // Match and skip any whitespace characters: spaces, tabs, carriage returns, and newlines.
 // These are ignored by the parser and do not generate tokens.
@@ -72,6 +72,6 @@ WS       : [ \t\r\n]+ -> skip ;          // Skip whitespace
 
 // Lexer rules for tags that should be ignored
 
-XML_DECL : '<?xml' .*? '?>' -> skip ;   // Ignore XML declaration
-SCENE_OPEN : '<scene>' -> skip ;        // Ignore <scene>
-SCENE_CLOSE : '</scene>' -> skip ;      // Ignore </scene>
+XML_DECL : '<?xml' .*? '?>';   // Ignore XML declaration
+SCENE_OPEN : '<scene>';        // Ignore <scene>
+SCENE_CLOSE : '</scene>';      // Ignore </scene>

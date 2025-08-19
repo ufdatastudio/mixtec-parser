@@ -1,0 +1,8 @@
+H=1
+Y=2
+ND=3
+OBJ=4
+NEAR_OBJ=5
+END=6
+WS=7
+'<End/>'=6
