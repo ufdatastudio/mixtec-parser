@@ -6,14 +6,12 @@ import tokens as tokens
 
 class SceneInterpreterVisitor(SceneVisitor):
 
-    def visitS(self, ctx: SceneParser.SContext):
+    def visitDocument(self, ctx: SceneParser.DocumentContext):
+        print("Visiting Document node")
         children = []
-        for sent_ctx, end_ctx in zip(ctx.sent(), ctx.END()):
+        for sent_ctx in ctx.sent():
             sent_node = self.visit(sent_ctx)
-            end_token = TokenConvertor.convert_token(end_ctx.getSymbol())
-            end_node = LeafNode(end_token)
             children.append(sent_node)
-            children.append(end_node)
 
         return Start(first_token=None, children=children).interpret()
 

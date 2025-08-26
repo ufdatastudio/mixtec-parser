@@ -20,7 +20,7 @@ def test_all_scenes():
     for i, (scene_path, expected) in enumerate(zip(input_files, expected_outputs), start=1):
         print(f"\n--- Testing Scene {i} ---")
         sys.argv = ["main.py", scene_path]  # Simulate command-line args
-        output = parseScene().strip()
+        output = parseScene()
         print("Output:", output)
         assert expected in output, f"❌ Scene {i} failed. Expected: {expected}, Got: {output}"
         print(f"✅ Scene {i} passed.")

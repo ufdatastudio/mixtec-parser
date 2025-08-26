@@ -8,12 +8,12 @@ else:
 # This class defines a complete listener for a parse tree produced by SceneParser.
 class SceneListener(ParseTreeListener):
 
-    # Enter a parse tree produced by SceneParser#s.
-    def enterS(self, ctx:SceneParser.SContext):
+    # Enter a parse tree produced by SceneParser#document.
+    def enterDocument(self, ctx:SceneParser.DocumentContext):
         pass
 
-    # Exit a parse tree produced by SceneParser#s.
-    def exitS(self, ctx:SceneParser.SContext):
+    # Exit a parse tree produced by SceneParser#document.
+    def exitDocument(self, ctx:SceneParser.DocumentContext):
         pass
 
 

@@ -56,6 +56,11 @@ def parseScene() -> str:
     token_stream = CommonTokenStream(lexer)               # Stream tokens for the parser 
     token_stream.fill()                                   # Tokenize the full input now
 
+    # DEBUG: Uncomment this code to debug lexer output
+    """print("[DEBUG] Tokens:")
+    for token in token_stream.tokens:
+        print(f"Type: {token.type}, Text: {token.text}")"""
+
     # -------------
     # Interpretation
     # -------------
@@ -75,10 +80,11 @@ def parseScene() -> str:
     else:
         # Default: Use the Antlr Parser
         print("Using Antlr parser")
-        parser = SceneParser(token_stream)                    # Parse tokens into a parse tree
-        tree = parser.s()                                     # Start parsing from the root rule `s`
+        parser = SceneParser(token_stream)           # Parse tokens into a parse tree
+        tree = parser.document()                     # Start parsing from the root rule `s`
+        # print(tree.toStringTree(recog=parser))
         visitor = SceneInterpreterVisitor()
-        text = visitor.visit(tree)                      # Recursively walk parse tree and interpret
+        text = visitor.visit(tree)                   # Recursively walk parse tree and interpret
         return text
 
 if __name__ == '__main__':

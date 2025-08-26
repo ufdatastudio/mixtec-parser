@@ -10,8 +10,8 @@ grammar Scene;
 // Parser Rules
 // --------------
 
-// Entry point of the parser: a full scene is made up of one or more complete sentences (sent), each ending in <End/>
-s       : XML_DECL (SCENE_OPEN sent SCENE_CLOSE)+ ;
+// Entry point of the parser: a full scene is made up of one or more complete sentences (sent)
+document       : XML_DECL? (SCENE_OPEN sent SCENE_CLOSE)+ ;
 
 // A sentence can take three valid forms, according to the grammar:
 // 1. A standalone clause
@@ -73,5 +73,5 @@ WS       : [ \t\r\n]+ -> skip ;          // Skip whitespace
 // Lexer rules for tags that should be ignored
 
 XML_DECL : '<?xml' .*? '?>';   // Ignore XML declaration
-SCENE_OPEN : '<scene>';        // Ignore <scene>
-SCENE_CLOSE : '</scene>';      // Ignore </scene>
+SCENE_OPEN : '<scene>';       
+SCENE_CLOSE : '</scene>';

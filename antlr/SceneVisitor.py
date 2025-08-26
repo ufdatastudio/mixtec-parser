@@ -9,8 +9,8 @@ else:
 
 class SceneVisitor(ParseTreeVisitor):
 
-    # Visit a parse tree produced by SceneParser#s.
-    def visitS(self, ctx:SceneParser.SContext):
+    # Visit a parse tree produced by SceneParser#document.
+    def visitDocument(self, ctx:SceneParser.DocumentContext):
         return self.visitChildren(ctx)
 
 
