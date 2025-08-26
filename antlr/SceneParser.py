@@ -11,39 +11,39 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\13")
-        buf.write("`\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
-        buf.write("\t\b\4\t\t\t\3\2\5\2\24\n\2\3\2\3\2\3\2\3\2\6\2\32\n\2")
-        buf.write("\r\2\16\2\33\3\3\3\3\3\3\3\3\3\3\3\3\5\3$\n\3\3\3\3\3")
-        buf.write("\3\3\3\3\5\3*\n\3\5\3,\n\3\3\4\6\4/\n\4\r\4\16\4\60\3")
-        buf.write("\4\3\4\5\4\65\n\4\3\5\3\5\3\5\6\5:\n\5\r\5\16\5;\3\5\6")
-        buf.write("\5?\n\5\r\5\16\5@\5\5C\n\5\3\6\3\6\3\6\6\6H\n\6\r\6\16")
-        buf.write("\6I\3\6\6\6M\n\6\r\6\16\6N\5\6Q\n\6\3\7\3\7\5\7U\n\7\3")
-        buf.write("\b\3\b\3\b\5\bZ\n\b\3\t\3\t\5\t^\n\t\3\t\2\2\n\2\4\6\b")
-        buf.write("\n\f\16\20\2\2\2l\2\23\3\2\2\2\4+\3\2\2\2\6.\3\2\2\2\b")
-        buf.write("\66\3\2\2\2\nD\3\2\2\2\fR\3\2\2\2\16V\3\2\2\2\20[\3\2")
-        buf.write("\2\2\22\24\7\t\2\2\23\22\3\2\2\2\23\24\3\2\2\2\24\31\3")
-        buf.write("\2\2\2\25\26\7\n\2\2\26\27\5\4\3\2\27\30\7\13\2\2\30\32")
-        buf.write("\3\2\2\2\31\25\3\2\2\2\32\33\3\2\2\2\33\31\3\2\2\2\33")
-        buf.write("\34\3\2\2\2\34\3\3\2\2\2\35,\5\6\4\2\36#\7\6\2\2\37 \5")
-        buf.write("\f\7\2 !\5\6\4\2!$\3\2\2\2\"$\5\6\4\2#\37\3\2\2\2#\"\3")
-        buf.write("\2\2\2$,\3\2\2\2%)\5\f\7\2&\'\7\6\2\2\'*\5\6\4\2(*\5\6")
-        buf.write("\4\2)&\3\2\2\2)(\3\2\2\2*,\3\2\2\2+\35\3\2\2\2+\36\3\2")
-        buf.write("\2\2+%\3\2\2\2,\5\3\2\2\2-/\5\16\b\2.-\3\2\2\2/\60\3\2")
-        buf.write("\2\2\60.\3\2\2\2\60\61\3\2\2\2\61\64\3\2\2\2\62\65\5\b")
-        buf.write("\5\2\63\65\5\n\6\2\64\62\3\2\2\2\64\63\3\2\2\2\64\65\3")
-        buf.write("\2\2\2\65\7\3\2\2\2\66B\5\f\7\2\679\7\6\2\28:\5\16\b\2")
-        buf.write("98\3\2\2\2:;\3\2\2\2;9\3\2\2\2;<\3\2\2\2<C\3\2\2\2=?\5")
-        buf.write("\16\b\2>=\3\2\2\2?@\3\2\2\2@>\3\2\2\2@A\3\2\2\2AC\3\2")
-        buf.write("\2\2B\67\3\2\2\2B>\3\2\2\2BC\3\2\2\2C\t\3\2\2\2DP\7\6")
-        buf.write("\2\2EG\5\f\7\2FH\5\16\b\2GF\3\2\2\2HI\3\2\2\2IG\3\2\2")
-        buf.write("\2IJ\3\2\2\2JQ\3\2\2\2KM\5\16\b\2LK\3\2\2\2MN\3\2\2\2")
-        buf.write("NL\3\2\2\2NO\3\2\2\2OQ\3\2\2\2PE\3\2\2\2PL\3\2\2\2PQ\3")
-        buf.write("\2\2\2Q\13\3\2\2\2RT\7\3\2\2SU\7\5\2\2TS\3\2\2\2TU\3\2")
-        buf.write("\2\2U\r\3\2\2\2VY\7\4\2\2WZ\7\5\2\2XZ\5\20\t\2YW\3\2\2")
-        buf.write("\2YX\3\2\2\2YZ\3\2\2\2Z\17\3\2\2\2[]\7\7\2\2\\^\7\5\2")
-        buf.write("\2]\\\3\2\2\2]^\3\2\2\2^\21\3\2\2\2\22\23\33#)+\60\64")
-        buf.write(";@BINPTY]")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\r")
+        buf.write("a\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b")
+        buf.write("\t\b\4\t\t\t\3\2\3\2\3\2\3\2\3\2\3\2\6\2\31\n\2\r\2\16")
+        buf.write("\2\32\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3%\n\3\3\3\3\3")
+        buf.write("\3\3\3\3\5\3+\n\3\5\3-\n\3\3\4\6\4\60\n\4\r\4\16\4\61")
+        buf.write("\3\4\3\4\5\4\66\n\4\3\5\3\5\3\5\6\5;\n\5\r\5\16\5<\3\5")
+        buf.write("\6\5@\n\5\r\5\16\5A\5\5D\n\5\3\6\3\6\3\6\6\6I\n\6\r\6")
+        buf.write("\16\6J\3\6\6\6N\n\6\r\6\16\6O\5\6R\n\6\3\7\3\7\5\7V\n")
+        buf.write("\7\3\b\3\b\3\b\5\b[\n\b\3\t\3\t\5\t_\n\t\3\t\2\2\n\2\4")
+        buf.write("\6\b\n\f\16\20\2\2\2l\2\22\3\2\2\2\4,\3\2\2\2\6/\3\2\2")
+        buf.write("\2\b\67\3\2\2\2\nE\3\2\2\2\fS\3\2\2\2\16W\3\2\2\2\20\\")
+        buf.write("\3\2\2\2\22\23\7\13\2\2\23\30\7\b\2\2\24\25\7\f\2\2\25")
+        buf.write("\26\5\4\3\2\26\27\7\r\2\2\27\31\3\2\2\2\30\24\3\2\2\2")
+        buf.write("\31\32\3\2\2\2\32\30\3\2\2\2\32\33\3\2\2\2\33\34\3\2\2")
+        buf.write("\2\34\35\7\t\2\2\35\3\3\2\2\2\36-\5\6\4\2\37$\7\6\2\2")
+        buf.write(" !\5\f\7\2!\"\5\6\4\2\"%\3\2\2\2#%\5\6\4\2$ \3\2\2\2$")
+        buf.write("#\3\2\2\2%-\3\2\2\2&*\5\f\7\2\'(\7\6\2\2(+\5\6\4\2)+\5")
+        buf.write("\6\4\2*\'\3\2\2\2*)\3\2\2\2+-\3\2\2\2,\36\3\2\2\2,\37")
+        buf.write("\3\2\2\2,&\3\2\2\2-\5\3\2\2\2.\60\5\16\b\2/.\3\2\2\2\60")
+        buf.write("\61\3\2\2\2\61/\3\2\2\2\61\62\3\2\2\2\62\65\3\2\2\2\63")
+        buf.write("\66\5\b\5\2\64\66\5\n\6\2\65\63\3\2\2\2\65\64\3\2\2\2")
+        buf.write("\65\66\3\2\2\2\66\7\3\2\2\2\67C\5\f\7\28:\7\6\2\29;\5")
+        buf.write("\16\b\2:9\3\2\2\2;<\3\2\2\2<:\3\2\2\2<=\3\2\2\2=D\3\2")
+        buf.write("\2\2>@\5\16\b\2?>\3\2\2\2@A\3\2\2\2A?\3\2\2\2AB\3\2\2")
+        buf.write("\2BD\3\2\2\2C8\3\2\2\2C?\3\2\2\2CD\3\2\2\2D\t\3\2\2\2")
+        buf.write("EQ\7\6\2\2FH\5\f\7\2GI\5\16\b\2HG\3\2\2\2IJ\3\2\2\2JH")
+        buf.write("\3\2\2\2JK\3\2\2\2KR\3\2\2\2LN\5\16\b\2ML\3\2\2\2NO\3")
+        buf.write("\2\2\2OM\3\2\2\2OP\3\2\2\2PR\3\2\2\2QF\3\2\2\2QM\3\2\2")
+        buf.write("\2QR\3\2\2\2R\13\3\2\2\2SU\7\3\2\2TV\7\5\2\2UT\3\2\2\2")
+        buf.write("UV\3\2\2\2V\r\3\2\2\2WZ\7\4\2\2X[\7\5\2\2Y[\5\20\t\2Z")
+        buf.write("X\3\2\2\2ZY\3\2\2\2Z[\3\2\2\2[\17\3\2\2\2\\^\7\7\2\2]")
+        buf.write("_\7\5\2\2^]\3\2\2\2^_\3\2\2\2_\21\3\2\2\2\21\32$*,\61")
+        buf.write("\65<ACJOQUZ^")
         return buf.getvalue()
 
 
@@ -58,11 +58,12 @@ class SceneParser ( Parser ):
     sharedContextCache = PredictionContextCache()
 
     literalNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                     "'<scene>'", "'</scene>'" ]
+                     "<INVALID>", "<INVALID>", "'<document>'", "'</document>'", 
+                     "<INVALID>", "<INVALID>", "'<scene>'", "'</scene>'" ]
 
-    symbolicNames = [ "<INVALID>", "Y", "H", "ND", "OBJ", "NEAR_OBJ", "WS", 
-                      "XML_DECL", "SCENE_OPEN", "SCENE_CLOSE" ]
+    symbolicNames = [ "<INVALID>", "Y", "H", "ND", "OBJ", "NEAR_OBJ", "DOCUMENT_OPEN", 
+                      "DOCUMENT_CLOSE", "WS", "XML_DECL", "SCENE_OPEN", 
+                      "SCENE_CLOSE" ]
 
     RULE_document = 0
     RULE_sent = 1
@@ -82,10 +83,12 @@ class SceneParser ( Parser ):
     ND=3
     OBJ=4
     NEAR_OBJ=5
-    WS=6
-    XML_DECL=7
-    SCENE_OPEN=8
-    SCENE_CLOSE=9
+    DOCUMENT_OPEN=6
+    DOCUMENT_CLOSE=7
+    WS=8
+    XML_DECL=9
+    SCENE_OPEN=10
+    SCENE_CLOSE=11
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -105,6 +108,12 @@ class SceneParser ( Parser ):
 
         def XML_DECL(self):
             return self.getToken(SceneParser.XML_DECL, 0)
+
+        def DOCUMENT_OPEN(self):
+            return self.getToken(SceneParser.DOCUMENT_OPEN, 0)
+
+        def DOCUMENT_CLOSE(self):
+            return self.getToken(SceneParser.DOCUMENT_CLOSE, 0)
 
         def SCENE_OPEN(self, i:int=None):
             if i is None:
@@ -152,30 +161,28 @@ class SceneParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
+            self.state = 16
+            self.match(SceneParser.XML_DECL)
             self.state = 17
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            if _la==SceneParser.XML_DECL:
-                self.state = 16
-                self.match(SceneParser.XML_DECL)
-
-
-            self.state = 23 
+            self.match(SceneParser.DOCUMENT_OPEN)
+            self.state = 22 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 19
+                self.state = 18
                 self.match(SceneParser.SCENE_OPEN)
-                self.state = 20
+                self.state = 19
                 self.sent()
-                self.state = 21
+                self.state = 20
                 self.match(SceneParser.SCENE_CLOSE)
-                self.state = 25 
+                self.state = 24 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not (_la==SceneParser.SCENE_OPEN):
                     break
 
+            self.state = 26
+            self.match(SceneParser.DOCUMENT_CLOSE)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -228,29 +235,29 @@ class SceneParser ( Parser ):
         localctx = SceneParser.SentContext(self, self._ctx, self.state)
         self.enterRule(localctx, 2, self.RULE_sent)
         try:
-            self.state = 41
+            self.state = 42
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [SceneParser.H]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 27
+                self.state = 28
                 self.clause()
                 pass
             elif token in [SceneParser.OBJ]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 28
+                self.state = 29
                 self.match(SceneParser.OBJ)
-                self.state = 33
+                self.state = 34
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [SceneParser.Y]:
-                    self.state = 29
-                    self.date()
                     self.state = 30
+                    self.date()
+                    self.state = 31
                     self.clause()
                     pass
                 elif token in [SceneParser.H]:
-                    self.state = 32
+                    self.state = 33
                     self.clause()
                     pass
                 else:
@@ -259,19 +266,19 @@ class SceneParser ( Parser ):
                 pass
             elif token in [SceneParser.Y]:
                 self.enterOuterAlt(localctx, 3)
-                self.state = 35
+                self.state = 36
                 self.date()
-                self.state = 39
+                self.state = 40
                 self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [SceneParser.OBJ]:
-                    self.state = 36
-                    self.match(SceneParser.OBJ)
                     self.state = 37
+                    self.match(SceneParser.OBJ)
+                    self.state = 38
                     self.clause()
                     pass
                 elif token in [SceneParser.H]:
-                    self.state = 38
+                    self.state = 39
                     self.clause()
                     pass
                 else:
@@ -339,27 +346,27 @@ class SceneParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 44 
+            self.state = 45 
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             while True:
-                self.state = 43
+                self.state = 44
                 self.clause_f()
-                self.state = 46 
+                self.state = 47 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if not (_la==SceneParser.H):
                     break
 
-            self.state = 50
+            self.state = 51
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [SceneParser.Y]:
-                self.state = 48
+                self.state = 49
                 self.date_tail()
                 pass
             elif token in [SceneParser.OBJ]:
-                self.state = 49
+                self.state = 50
                 self.obj_tail()
                 pass
             elif token in [SceneParser.SCENE_CLOSE]:
@@ -423,21 +430,21 @@ class SceneParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 52
+            self.state = 53
             self.date()
-            self.state = 64
+            self.state = 65
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [SceneParser.OBJ]:
-                self.state = 53
+                self.state = 54
                 self.match(SceneParser.OBJ)
-                self.state = 55 
+                self.state = 56 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 54
+                    self.state = 55
                     self.clause_f()
-                    self.state = 57 
+                    self.state = 58 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SceneParser.H):
@@ -445,13 +452,13 @@ class SceneParser ( Parser ):
 
                 pass
             elif token in [SceneParser.H]:
-                self.state = 60 
+                self.state = 61 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 59
+                    self.state = 60
                     self.clause_f()
-                    self.state = 62 
+                    self.state = 63 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SceneParser.H):
@@ -519,21 +526,21 @@ class SceneParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 66
+            self.state = 67
             self.match(SceneParser.OBJ)
-            self.state = 78
+            self.state = 79
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [SceneParser.Y]:
-                self.state = 67
+                self.state = 68
                 self.date()
-                self.state = 69 
+                self.state = 70 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 68
+                    self.state = 69
                     self.clause_f()
-                    self.state = 71 
+                    self.state = 72 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SceneParser.H):
@@ -541,13 +548,13 @@ class SceneParser ( Parser ):
 
                 pass
             elif token in [SceneParser.H]:
-                self.state = 74 
+                self.state = 75 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 73
+                    self.state = 74
                     self.clause_f()
-                    self.state = 76 
+                    self.state = 77 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not (_la==SceneParser.H):
@@ -607,13 +614,13 @@ class SceneParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 80
+            self.state = 81
             self.match(SceneParser.Y)
-            self.state = 82
+            self.state = 83
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==SceneParser.ND:
-                self.state = 81
+                self.state = 82
                 self.match(SceneParser.ND)
 
 
@@ -669,17 +676,17 @@ class SceneParser ( Parser ):
         self.enterRule(localctx, 12, self.RULE_clause_f)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 84
+            self.state = 85
             self.match(SceneParser.H)
-            self.state = 87
+            self.state = 88
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [SceneParser.ND]:
-                self.state = 85
+                self.state = 86
                 self.match(SceneParser.ND)
                 pass
             elif token in [SceneParser.NEAR_OBJ]:
-                self.state = 86
+                self.state = 87
                 self.near_date()
                 pass
             elif token in [SceneParser.Y, SceneParser.H, SceneParser.OBJ, SceneParser.SCENE_CLOSE]:
@@ -735,13 +742,13 @@ class SceneParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 89
+            self.state = 90
             self.match(SceneParser.NEAR_OBJ)
-            self.state = 91
+            self.state = 92
             self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==SceneParser.ND:
-                self.state = 90
+                self.state = 91
                 self.match(SceneParser.ND)
 
 

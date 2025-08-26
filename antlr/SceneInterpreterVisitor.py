@@ -7,7 +7,6 @@ import tokens as tokens
 class SceneInterpreterVisitor(SceneVisitor):
 
     def visitDocument(self, ctx: SceneParser.DocumentContext):
-        print("Visiting Document node")
         children = []
         for sent_ctx in ctx.sent():
             sent_node = self.visit(sent_ctx)

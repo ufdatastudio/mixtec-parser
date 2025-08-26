@@ -10,8 +10,10 @@ grammar Scene;
 // Parser Rules
 // --------------
 
-// Entry point of the parser: a full scene is made up of one or more complete sentences (sent)
-document       : XML_DECL? (SCENE_OPEN sent SCENE_CLOSE)+ ;
+// Start Rule: A document starts with an xml declaration and contains a document tag having multiple Scenes
+document 
+    : XML_DECL DOCUMENT_OPEN (SCENE_OPEN sent SCENE_CLOSE)+ DOCUMENT_CLOSE
+    ;
 
 // A sentence can take three valid forms, according to the grammar:
 // 1. A standalone clause
@@ -63,7 +65,9 @@ H        : '<human'    .*? '/>' ;        // Matches <human ... />
 ND       : '<name_date' .*? '/>' ;       // Matches <name_date ... />
 OBJ      : '<obj'      .*? '/>' ;        // Matches <obj ... />
 NEAR_OBJ : '<near_obj' .*? '/>' ;        // Matches <near_obj ... />
-// END      : '<end'      .*? '/>' ;        // Matches <end ... />
+DOCUMENT_OPEN  : '<document>' ;
+DOCUMENT_CLOSE : '</document>' ;
+
 
 // Match and skip any whitespace characters: spaces, tabs, carriage returns, and newlines.
 // These are ignored by the parser and do not generate tokens.

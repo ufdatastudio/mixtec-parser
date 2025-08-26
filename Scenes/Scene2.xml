@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scene>
-    <year x="0" y="0" symbol="House" number="5" />
-    <human x="0" y="0" gender="Lord" pose="sitting" orientation="right" />
-    <name_date x="0" y="0" symbol="Wind" number="4" />
-    <obj x="0" y="0" identity="house" />
-    <human x="0" y="0" gender="Lady" pose="sitting" orientation="left" />
-    <name_date x="0" y="0" symbol="Serpent" number="10" />
-</scene>
+<document>
+	<scene>
+		<year x="0" y="0" symbol="House" number="5" />
+		<human x="0" y="0" gender="Lord" pose="sitting" orientation="right" />
+		<name_date x="0" y="0" symbol="Wind" number="4" />
+		<obj x="0" y="0" identity="house" />
+		<human x="0" y="0" gender="Lady" pose="sitting" orientation="left" />
+		<name_date x="0" y="0" symbol="Serpent" number="10" />
+	</scene>
+</document>

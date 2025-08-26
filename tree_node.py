@@ -63,7 +63,7 @@ class Start(TreeNode):
         for sent_or_end in self.children:
             sentence_list.append(sent_or_end.interpret())
 
-        return "".join(sentence_list)
+        return ". ".join(sentence_list)
         
 class Sent(TreeNode):
     """

@@ -22,7 +22,7 @@ import tokens as tokens
 import recursive_descent.parser as p
 import recursive_descent.interpreter as interpreter         
 
-def parseScene() -> str:
+def parseScenes() -> str:
     # Setup command-line arguments
     parser = argparse.ArgumentParser(description="Scene parser and interpreter")
     
@@ -88,4 +88,4 @@ def parseScene() -> str:
         return text
 
 if __name__ == '__main__':
-    print(parseScene())
+    print(parseScenes())
