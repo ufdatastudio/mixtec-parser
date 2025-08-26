@@ -65,12 +65,13 @@ def parseScenes() -> str:
     # Interpretation
     # -------------
     if args.recursiveDescent:
-        print("Using Recursive Descent parser")
         # If --recursiveDescent flag is passed, use the recursive descent parser
         token_list : list[tokens.Token] = []
         for token in token_stream.tokens[:-1]:
-            token_list.append(TokenConvertor.convert_token(token))
-
+            if token.type == 11:
+                 token_list.append(tokens.End(0,0,0))
+            if token.type not in [6,7,9,10,11]:
+                token_list.append(TokenConvertor.convert_token(token))
         par = p.Parser()
         ast = par(token_list)
         inter = interpreter.Interpreter()
@@ -79,7 +80,6 @@ def parseScenes() -> str:
 
     else:
         # Default: Use the Antlr Parser
-        print("Using Antlr parser")
         parser = SceneParser(token_stream)           # Parse tokens into a parse tree
         tree = parser.document()                     # Start parsing from the root rule `s`
         # print(tree.toStringTree(recog=parser))
