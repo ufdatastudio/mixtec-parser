@@ -1,10 +1,21 @@
 # CWDE615
-# Parser for a limited Mixtec Grammar. Check the README for this grammar.
-import tokens
-import tree_node
+# pyright: reportShadowedImports=false
+"""
+    Adhoc recursive descent Parser for a limited Mixtec Grammar. 
+    A parser is a program that takes a sequence of tokens (like Human, Year, Obj, NameDate, etc.) 
+    and builds a structured tree (called a parse tree or abstract syntax tree (AST)) 
+    that reflects the grammar rules defined for Mixtec scenes.
+    Check the README for this grammar.
+"""
+import tokens as tokens
+import tree_node as tree_node
+from tree_node import LeafNode
 
 class Parser():
-
+    """
+        A parser is a program that takes a sequence of tokens (like Human, Year, Obj, NameDate, etc.) 
+        and builds a structured tree (called a parse tree or abstract syntax tree (AST)) that reflects the grammar rules defined for Mixtec scenes.
+    """
     # HELPERS
     @staticmethod
     def match(exp : type, cand : tokens.Token):
@@ -34,7 +45,8 @@ class Parser():
         return self.tks[-1]
     
     def consume_next_token(self, c : list[tree_node.TreeNode], exp : type):
-        c.append(self.tks[-1])
+        token = self.tks[-1]
+        c.append(LeafNode(token))
         self.consume(exp)
 
     # RECURSIVE DESCENT METHODS

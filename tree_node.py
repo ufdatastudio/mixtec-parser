@@ -1,9 +1,30 @@
 # CWDE615
-# a file for parse tree nodes
-import tokens
+# A file for parse tree nodes
+""" This code defines the Abstract Syntax Tree (AST) node classes used in the Mixtec Parser 
+for interpreting a sequence of tokens representing Mixtec codices, 
+based on the provided Context-Free Grammar (CFG)"""
+
+import tokens as tokens
 from abc import ABC, abstractmethod
 
 class TreeNode(ABC):
+    """
+        This is the base class for all AST nodes.
+
+        Attributes:
+        - children: child nodes in the parse tree (can be other TreeNodes).
+
+        - first_token: the token (like Human, Obj, etc.) that started this tree node.
+
+        Methods:
+        - add_children(chs): Adds children to the current node.
+
+        - get_children(), get_token(): Accessor methods.
+
+        - is_first_token_type(exp): Checks if this node’s first token is of a given type.
+
+        - interpret(): Abstract method that must be implemented by subclasses to produce human-readable output.
+    """
     def __init__(self, first_token, children : list[object] = None):
         self.children : list[object] = children if children != None else []
         self.first_token : tokens.Token = first_token
@@ -26,6 +47,13 @@ class TreeNode(ABC):
         pass
     
 class Start(TreeNode):
+    """
+        This is the root node of the tree, corresponding to the CFG rule S ::= (Sent end)+.
+
+        Methods: 
+        - interpret() : Iterates through children (which alternate between Sent and end) and calls their interpret() method.
+        Joins all sentence interpretations into a final string.
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
 
@@ -35,9 +63,21 @@ class Start(TreeNode):
         for sent_or_end in self.children:
             sentence_list.append(sent_or_end.interpret())
 
-        return "".join(sentence_list)
+        return ". ".join(sentence_list)
         
 class Sent(TreeNode):
+    """
+        Represents a sentence, following the Sent rule in the CFG.
+        Sent ::= Clause | obj (Date Clause | Clause) | Date (obj Clause | Clause)
+
+        Methods: 
+        - interpret(): Handles three major types of sentences:
+
+        1. If the sentence starts with a Human token → it's a Clause.
+        2. If it starts with an Obj or Year, 
+            we process the first part (e.g., date or place), 
+            capitalize it, and interpret the rest accordingly.
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -61,6 +101,28 @@ class Sent(TreeNode):
         return " ".join(sentence_list)
 
 class Clause(TreeNode):
+    """
+        Represents the rule ->  Clause ::= Clause_f+ (Date_tail | Obj_tail | ɛ)
+        This class contains domain-specific knowledge for interpreting scenes based on human pose, gender, and symbolic artifacts.
+
+        Methods:
+        - interpret(): This is the core logic of interpreting relationships between humans, objects, and time.
+
+        Steps:
+        1. Collect all leading ClauseF nodes (representing people).
+
+        2. Check if a DateTail or ObjTail exists (to be interpreted later).
+
+        3. If the tail is present:
+            a. Parse its elements: objects, dates, and right-hand side human figures (if any).
+            b. Use @ and $ to delimit parsed segments (e.g., obj@date@humans).
+
+        Note: The logic varies significantly depending on:
+            a. Number of people involved.
+            b. Their orientation (e.g., facing each other = interaction).
+            c. Pose (e.g., both sitting = marriage or ritual).
+            d. Presence of objects (e.g., throne, sacrificed_animal, weapon).
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -296,6 +358,14 @@ class Clause(TreeNode):
         return "<ERROR: Clause is in grammar but no interpretation exists for it.>"
 
 class DateTail(TreeNode):
+    """
+        Represents optional Date_tail ::= Date (obj Clause_f+ | Clause_f+ | ɛ).
+
+        Methods: 
+        interpret() -> tuple
+            Returns a tuple: A string in the format date@obj@humans, or just date.
+            Lists of pose, orientation, gender for further semantic interpretation.
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -339,6 +409,14 @@ class DateTail(TreeNode):
 
 
 class ObjTail(TreeNode):
+    """
+        Represents optional Obj_tail ::= obj (Date Clause_f+ | Clause_f+ | ɛ).
+
+        Methods: 
+        interpret() -> tuple
+            Returns a tuple: A string in the format obj@date@humans or just obj.
+            Lists of pose, orientation, gender for further semantic interpretation.
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -380,6 +458,14 @@ class ObjTail(TreeNode):
             return obj_string, [], [], []
 
 class Date(TreeNode):
+    """
+    Represents a date token: Date ::= y (nd | ɛ).
+
+    Methods:
+        interpret()
+        If an nd (name-date) follows a y (year), returns: in Year 12 Reed Day 3 Deerslac
+        If no nd, just: in Year 12 Reed
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -396,6 +482,19 @@ class Date(TreeNode):
 
 
 class ClauseF(TreeNode):
+    """
+        Represents an individual clause fragment: Clause_f ::= h ( nd | Near_date | ɛ ).
+
+        Methods: 
+            interpret()
+            If alone → returns "a Lord" / "a Lady"
+
+            If followed by:
+
+                NameDate → returns "Lord 3 Deer"
+
+                NearObj → returns "a Lord$torch" or "Lord 3 Deer$torch"
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -428,6 +527,13 @@ class ClauseF(TreeNode):
             return f'a {h_string}' # 'a Lord' or 'a Lady' since they have no name-date.
 
 class NearDate(TreeNode):
+    """
+    Represents Near_date ::= near_obj (nd | ɛ)
+
+    interpret()
+        Returns a string like "torch$3 Deer" to indicate possession or association
+        (e.g., "Lady with a torch named 3 Deer").
+    """
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
     
@@ -442,5 +548,16 @@ class NearDate(TreeNode):
             return "$".join([near_obj_string, name_date_string])
         else:
             return near_obj_string
+            
+class LeafNode(TreeNode):
+    def __init__(self, token: "Token"):
+        super().__init__(token, children=None)
+
+    def interpret(self) -> str:
+        # For leaf nodes, interpretation is just the token's interpretation
+        return self.first_token.interpret()
+
+    def to_xml(self) -> str:
+        return self.first_token.to_xml()
             
     

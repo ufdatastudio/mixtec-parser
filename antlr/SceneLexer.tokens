@@ -1,0 +1,15 @@
+Y=1
+H=2
+ND=3
+OBJ=4
+NEAR_OBJ=5
+DOCUMENT_OPEN=6
+DOCUMENT_CLOSE=7
+WS=8
+XML_DECL=9
+SCENE_OPEN=10
+SCENE_CLOSE=11
+'<document>'=6
+'</document>'=7
+'<scene>'=10
+'</scene>'=11

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<scene>
+		<year x="0" y="0" symbol="House" number="5" />
+		<human x="0" y="0" gender="Lord" pose="standing" orientation="right" />
+		<near_obj x="0" y="0" identity="weapon" />
+		<name_date x="0" y="0" symbol="Wind" number="4" />
+		<human x="0" y="0" gender="Lord" pose="standing" orientation="left" />
+		<near_obj x="0" y="0" identity="shield" />
+		<name_date x="0" y="0" symbol="Death" number="6" />
+	</scene>
+	<scene>
+		<year x="0" y="0" symbol="House" number="5" />
+		<human x="0" y="0" gender="Lord" pose="standing" orientation="right" />
+		<near_obj x="0" y="0" identity="sacrificed_animal" />
+		<name_date x="0" y="0" symbol="Wind" number="4" />
+		<human x="0" y="0" gender="Lord" pose="standing" orientation="left" />
+		<name_date x="0" y="0" symbol="Death" number="6" />
+	</scene>
+</document>
