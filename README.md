@@ -1,6 +1,6 @@
 # Mixtec Parser
 
-This repo contains a parser and interpreter for a limited grammar intended for Mixtec codices.
+This repo contains a parser and interpreter for a limited grammar intended for Mixtec codices. It is implemented using ANTLR4.
 
 ## Context Free Grammar (CFG):
 
