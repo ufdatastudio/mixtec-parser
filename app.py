@@ -110,8 +110,9 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
 }
 .narration .scene-number { color: #9E2B25; font-size: 0.95rem; margin-right: 0.5rem; }
 .vbar { width: 0; border-left: 1.5px solid #D9CDB2; height: 170px; margin: 0.5rem auto 0 auto; }
+.vbar-results { width: 0; border-left: 1.5px solid #D9CDB2; height: 520px; margin: 0.4rem auto 0 auto; }
 .scene-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px 2px; }
-.scene-strip a { flex: 0 0 auto; display: block; }
+.scene-strip a, .scene-strip span { flex: 0 0 auto; display: block; }
 .scene-strip img {
     height: 96px; width: auto; display: block; border-radius: 6px;
     border: 1.5px solid #D9CDB2; background: #FFF;
@@ -263,8 +264,9 @@ def scene_strip_html() -> str:
     """A horizontally scrollable strip of codex scene thumbnails.
 
     Scenes with token encodings come first, framed in red; clicking one loads
-    it for interpretation through the scene query param. The rest open their
-    full-resolution file in the Hugging Face dataset.
+    it for interpretation through the scene query param. The rest are shown
+    for browsing only, with their dataset link surfaced in the results panel
+    once a scene is selected.
     """
     cards = []
     for scene in presets.ATTESTED_SCENES:
@@ -276,10 +278,9 @@ def scene_strip_html() -> str:
         )
     for scene in presets.BROWSE_SCENES:
         uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
-        label = html.escape(f'Open in the dataset: {scene["label"]}')
+        label = html.escape(scene["label"])
         cards.append(
-            f'<a href="{scene["link"]}" target="_blank" title="{label}">'
-            f'<img src="{uri}" alt="{label}"/></a>'
+            f'<span title="{label}"><img src="{uri}" alt="{label}"/></span>'
         )
     return f'<div class="scene-strip">{"".join(cards)}</div>'
 
@@ -348,10 +349,12 @@ def render_scene_outputs(specs: list[dict], show_xml: bool = True, facsimile: di
     st.markdown("###### Machine narration")
     render_narration(scenes.narrate(root))
 
-    ast_col, detail_col = st.columns([3, 2], gap="large")
+    ast_col, results_bar_col, detail_col = st.columns([3, 0.14, 2], gap="small")
     with ast_col:
         st.markdown("###### Abstract syntax tree, as in Figure 3 of the paper")
         graphviz_chart(ast_viz.to_dot(root))
+    with results_bar_col:
+        st.markdown('<div class="vbar-results"></div>', unsafe_allow_html=True)
     with detail_col:
         if facsimile:
             st.markdown("###### The scene on the codex page")
@@ -441,15 +444,15 @@ def render_compose_tab() -> None:
         "change."
     )
 
-    gallery_col, bar_col, picker_col = st.columns([2.6, 0.14, 2.4], gap="small")
+    picker_col, bar_col, gallery_col = st.columns([2.4, 0.14, 2.6], gap="small")
 
     with gallery_col:
         st.markdown("###### Scenes from the codex")
         st.markdown(scene_strip_html(), unsafe_allow_html=True)
         st.caption(
             "Red-framed scenes have token encodings; click one to interpret "
-            "it. The others open at full resolution in the "
-            f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging Face, "
+            "it. The rest come from the "
+            f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging Face "
             "and join the encoded set as their readings are curated."
         )
 
