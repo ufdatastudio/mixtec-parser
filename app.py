@@ -21,6 +21,8 @@ import presets
 import scenes
 import sketch
 
+APP_DIR = os.path.dirname(os.path.abspath(__file__))
+
 PAPER_URL = "https://aclanthology.org/2026.alvr-main.20/"
 PAPER_PDF_URL = "https://aclanthology.org/2026.alvr-main.20.pdf"
 POSTER_URL = "https://ufdatastudio.com/papers/driggers-ellis2026formal-poster.pdf"
@@ -365,6 +367,8 @@ def render_compose_tab() -> None:
     if st.session_state.active_preset:
         preset = presets.by_title(st.session_state.active_preset)
         facsimile = preset.get("facsimile")
+        if facsimile:
+            facsimile = os.path.join(APP_DIR, facsimile)
         if facsimile and os.path.exists(facsimile):
             image_col, text_col = st.columns([1.1, 2.9], gap="medium")
             with image_col:
@@ -605,7 +609,10 @@ def render_about_tab() -> None:
 
 def render_footer() -> None:
     st.divider()
-    logo_paths = ["logos/uflorida_logo.jpeg", "logos/ufdatastudio-logo.jpeg"]
+    logo_paths = [
+        os.path.join(APP_DIR, "logos/uflorida_logo.jpeg"),
+        os.path.join(APP_DIR, "logos/ufdatastudio-logo.jpeg"),
+    ]
     logos = [path for path in logo_paths if os.path.exists(path)]
     if logos:
         columns = st.columns([4, 1, 1, 4])
