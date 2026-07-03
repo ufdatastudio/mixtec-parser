@@ -3,38 +3,41 @@
 import tokens
 import tree_node
 
+class ParseError(Exception):
+    """Raised when a token sequence does not belong to the scene grammar."""
+
 class Parser():
 
     # HELPERS
     @staticmethod
     def match(exp : type, cand : tokens.Token):
         if not type(cand) == exp:
-            print(f"Error in match: {type(cand)} does not match {exp}")
-            assert False
+            raise ParseError(f"Error in match: {type(cand).__name__} does not match {exp.__name__}")
 
     @staticmethod
     def raise_error(mes : str): # TODO: make more robust in reporting error metadata
-        print(f"Error: {mes}")
-        assert False
-    
+        raise ParseError(mes)
+
     @staticmethod
     def call_descent_method(c: list[tree_node.TreeNode], m):
         c.append(m())
 
     def consume(self, exp : type):
-        top : tokens.Token = self.tks[-1]
+        top : tokens.Token = self.next_token()
         self.match(exp, top)
         self.tks.pop()
         return top
 
     def next_token_type(self, token_type : type):
-        return type(self.tks[-1]) == token_type
-    
+        return len(self.tks) > 0 and type(self.tks[-1]) == token_type
+
     def next_token(self):
+        if len(self.tks) == 0:
+            raise ParseError("Unexpected end of input. Each scene must finish with an end token.")
         return self.tks[-1]
     
     def consume_next_token(self, c : list[tree_node.TreeNode], exp : type):
-        c.append(self.tks[-1])
+        c.append(self.next_token())
         self.consume(exp)
 
     # RECURSIVE DESCENT METHODS
