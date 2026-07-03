@@ -19,10 +19,11 @@ import interpreter
 import parser
 import presets
 import scenes
+import sketch
 
 PAPER_URL = "https://aclanthology.org/2026.alvr-main.20/"
 PAPER_PDF_URL = "https://aclanthology.org/2026.alvr-main.20.pdf"
-POSTER_URL = "https://ufdatastudio.com/papers/driggersellis2026formal-poster.pdf"
+POSTER_URL = "https://ufdatastudio.com/papers/driggers-ellis2026formal-poster.pdf"
 LAB_URL = "https://ufdatastudio.com"
 VIT_DEMO_URL = "https://mixtec.streamlit.app"
 
@@ -271,6 +272,13 @@ def render_scene_outputs(specs: list[dict], show_xml: bool = True) -> None:
         st.markdown("###### Abstract syntax tree, as in Figure 3 of the paper")
         graphviz_chart(ast_viz.to_dot(root))
     with detail_col:
+        st.markdown("###### Scene sketch")
+        st.markdown(sketch.to_svg(specs), unsafe_allow_html=True)
+        st.caption(
+            "A schematic of how the glyphs sit on the page: names float by "
+            "their figures, personal objects ride with their owners, and red "
+            "bands divide scenes."
+        )
         if show_xml:
             st.markdown("###### XML scene encoding, as in Figure 2 of the paper")
             st.code(scenes.specs_to_xml(scenes.ensure_end(specs)), language="xml")
@@ -356,8 +364,17 @@ def render_compose_tab() -> None:
 
     if st.session_state.active_preset:
         preset = presets.by_title(st.session_state.active_preset)
-        st.caption(f'{preset["source"]}')
-        st.markdown(preset["blurb"])
+        facsimile = preset.get("facsimile")
+        if facsimile and os.path.exists(facsimile):
+            image_col, text_col = st.columns([1.1, 2.9], gap="medium")
+            with image_col:
+                st.image(facsimile, caption=preset.get("facsimile_caption"))
+            with text_col:
+                st.caption(f'{preset["source"]}')
+                st.markdown(preset["blurb"])
+        else:
+            st.caption(f'{preset["source"]}')
+            st.markdown(preset["blurb"])
 
     st.markdown("###### Scene tokens, in reading order")
     render_chips(st.session_state.specs)
