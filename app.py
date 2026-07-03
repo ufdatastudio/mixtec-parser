@@ -7,7 +7,9 @@ and Early Colonial Mesoamerica" (ALVR 2026, pages 230-238).
 Run with: uv run streamlit run app.py
 """
 
+import base64
 import copy
+import functools
 import html
 import os
 
@@ -107,6 +109,15 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
     line-height: 1.55; color: #221D18;
 }
 .narration .scene-number { color: #9E2B25; font-size: 0.95rem; margin-right: 0.5rem; }
+.vbar { width: 0; border-left: 1.5px solid #D9CDB2; height: 170px; margin: 0.5rem auto 0 auto; }
+.scene-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px 2px; }
+.scene-strip a { flex: 0 0 auto; display: block; }
+.scene-strip img {
+    height: 96px; width: auto; display: block; border-radius: 6px;
+    border: 1.5px solid #D9CDB2; background: #FFF;
+}
+.scene-strip a:hover img { border-color: #9E2B25; box-shadow: 0 0 0 1px #9E2B25; }
+.scene-strip a.encoded img { border: 2.5px solid #9E2B25; }
 </style>
 """
 
@@ -118,6 +129,18 @@ def default_xml() -> str:
 
 
 def init_state() -> None:
+    # thumbnails in the scene strip select a scene through the scene query param
+    requested = st.query_params.get("scene")
+    if requested:
+        try:
+            preset = presets.by_key(requested)
+            st.session_state.specs = copy.deepcopy(preset["specs"])
+            st.session_state.active_preset = preset["title"]
+            logger.info("Loaded scene from query param: {}", requested)
+        except KeyError:
+            logger.warning("Unknown scene in query param: {}", requested)
+        st.query_params.clear()
+
     if "specs" not in st.session_state:
         wedding = presets.PRESETS[0]
         st.session_state.specs = copy.deepcopy(wedding["specs"])
@@ -136,13 +159,6 @@ def load_preset() -> None:
     st.session_state.active_preset = title
     st.session_state.preset_choice = None
     logger.info("Loaded preset: {}", title)
-
-
-def load_attested_scene(preset_key: str) -> None:
-    preset = presets.by_key(preset_key)
-    st.session_state.specs = copy.deepcopy(preset["specs"])
-    st.session_state.active_preset = preset["title"]
-    logger.info("Loaded attested scene: {}", preset_key)
 
 
 def add_figure() -> None:
@@ -214,6 +230,38 @@ def restore_paper_xml() -> None:
 
 
 # RENDER HELPERS
+@functools.lru_cache(maxsize=32)
+def _image_data_uri(path: str) -> str:
+    with open(path, "rb") as file:
+        encoded = base64.b64encode(file.read()).decode()
+    return f"data:image/jpeg;base64,{encoded}"
+
+
+def scene_strip_html() -> str:
+    """A horizontally scrollable strip of codex scene thumbnails.
+
+    Scenes with token encodings come first, framed in red; clicking one loads
+    it for interpretation through the scene query param. The rest open their
+    full-resolution file in the Hugging Face dataset.
+    """
+    cards = []
+    for scene in presets.ATTESTED_SCENES:
+        uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
+        label = html.escape(f'Click to interpret: {scene["label"]}')
+        cards.append(
+            f'<a class="encoded" href="?scene={scene["preset_key"]}" target="_self" '
+            f'title="{label}"><img src="{uri}" alt="{label}"/></a>'
+        )
+    for scene in presets.BROWSE_SCENES:
+        uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
+        label = html.escape(f'Open in the dataset: {scene["label"]}')
+        cards.append(
+            f'<a href="{scene["link"]}" target="_blank" title="{label}">'
+            f'<img src="{uri}" alt="{label}"/></a>'
+        )
+    return f'<div class="scene-strip">{"".join(cards)}</div>'
+
+
 def graphviz_chart(dot: str) -> None:
     try:
         st.graphviz_chart(dot, width="stretch")
@@ -366,44 +414,37 @@ def render_compose_tab() -> None:
         "change."
     )
 
-    st.markdown("###### Scenes from the codex")
-    gallery_columns = st.columns(4)
-    for index, scene in enumerate(presets.ATTESTED_SCENES):
-        with gallery_columns[index % 4]:
-            st.image(os.path.join(APP_DIR, scene["thumb"]), caption=scene["label"])
-            st.button(
-                "Interpret this scene",
-                key=f'attested_{scene["preset_key"]}',
-                on_click=load_attested_scene,
-                args=(scene["preset_key"],),
-                type="primary",
-            )
-    st.caption(
-        "The paper encodes the wedding scene; more cutouts join the gallery as "
-        "their token encodings are curated."
-    )
+    gallery_col, bar_col, picker_col = st.columns([2.6, 0.14, 2.4], gap="small")
 
-    with st.expander("Browse more scene cutouts from the codex"):
-        st.markdown(
-            "These segments come from the lab's "
-            f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) of 270 scene "
-            "cutouts. They await token encodings, so for now they are for "
-            "browsing; each links to its full-resolution image."
+    with gallery_col:
+        st.markdown("###### Scenes from the codex")
+        st.markdown(scene_strip_html(), unsafe_allow_html=True)
+        st.caption(
+            "Red-framed scenes have token encodings; click one to interpret "
+            "it. The others open at full resolution in the "
+            f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging Face, "
+            "and join the encoded set as their readings are curated."
         )
-        browse_columns = st.columns(3)
-        for index, scene in enumerate(presets.BROWSE_SCENES):
-            with browse_columns[index % 3]:
-                st.image(os.path.join(APP_DIR, scene["thumb"]))
-                st.markdown(f'[{scene["label"]}]({scene["link"]})')
 
-    st.selectbox(
-        "Or load a constructed example scene",
-        options=[preset["title"] for preset in presets.PRESETS],
-        index=None,
-        placeholder="Choose a scene…",
-        key="preset_choice",
-        on_change=load_preset,
-    )
+    with bar_col:
+        st.markdown('<div class="vbar"></div>', unsafe_allow_html=True)
+
+    with picker_col:
+        st.markdown("###### Example scenes")
+        st.selectbox(
+            "Load an example scene",
+            options=[preset["title"] for preset in presets.PRESETS],
+            index=None,
+            placeholder="Choose a scene…",
+            key="preset_choice",
+            on_change=load_preset,
+            label_visibility="collapsed",
+        )
+        st.caption(
+            "Attested and constructed scenes: weddings, audiences, "
+            "sacrifices, combats, and processions. A chosen scene shows its "
+            "codex facsimile below when one exists."
+        )
 
     if st.session_state.active_preset:
         preset = presets.by_title(st.session_state.active_preset)
