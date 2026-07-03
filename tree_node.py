@@ -1,6 +1,5 @@
 # CWDE615
 # a file for parse tree nodes
-import tokens
 from abc import ABC, abstractmethod
 
 class TreeNode(ABC):
@@ -24,7 +23,12 @@ class TreeNode(ABC):
     @abstractmethod
     def interpret(self) -> str:
         pass
-    
+
+# tokens.Token subclasses TreeNode, so this import must come after the class
+# definition for the tokens <-> tree_node import cycle to resolve from either
+# import order.
+import tokens
+
 class Start(TreeNode):
     def __init__(self, first_token, children = None):
         super().__init__(first_token, children)
@@ -145,12 +149,13 @@ class Clause(TreeNode):
             
             # the figures are facing the same direction
             if l_orientation == r_orientation:
-                result_l = l_name_near_obj[0] if len(l_name_near_obj) == 1 else f"{l_name_near_obj[0]} with a {l_name_near_obj[1]}" 
+                result_l = l_name_near_obj[0] if len(l_name_near_obj) == 1 else f"{l_name_near_obj[0]} with a {l_name_near_obj[1]}"
                 result_r = r_name_near_obj[0] if len(r_name_near_obj) == 1 else f"{r_name_near_obj[0]} with a {r_name_near_obj[1]}"
-                
-                # For there to be a r_human_list, there must be a right Clause_f+ in the AST, implying that there must also
-                # be some kind of tail. Include it with the output.
-                return check_date_obj(" ".join(["there was", result_l, "and", result_r, "near", obj_string]))
+
+                # This branch is also reached when both figures precede the tail (or there is no
+                # tail at all), so obj_string may be None. check_date_obj annotates the date and
+                # object whenever they are present.
+                return check_date_obj(" ".join(["there was", result_l, "and", result_r]))
 
             # beyond this point, orientation is different
             # handle the rare case that two figures are drawn facing away from each
@@ -166,13 +171,13 @@ class Clause(TreeNode):
 
             # tail has table or house obj and two h with opposite gender are sitting. This is usually taken to
             # mean that the two figures were married, and is common in genealogical segments.
-            if obj_string in ["house", "table"] and l_gender is not r_gender and l_pose == 0 and r_pose == 0:
+            if obj_string in ["house", "table"] and l_gender != r_gender and l_pose == 0 and r_pose == 0:
                 return check_for_date(" ".join([l_name_near_obj[0], "married", r_name_near_obj[0]]))
             
             # There is no object between the figures, and one is sitting while the other is standing. This normally indicates
             # that the stander is consulting with the sitter. The sitter often appears on a throne, which will appear as a near_obj
             # token and is handled.
-            if l_pose is not r_pose:
+            if l_pose != r_pose:
                 sitter = l_name_near_obj if l_pose == 0 else r_name_near_obj
                 stander = r_name_near_obj if l_pose == 0 else l_name_near_obj
                 sit_gender = l_gender if l_pose == 0 else r_gender
@@ -254,16 +259,16 @@ class Clause(TreeNode):
                 
                 if l_same and l_standing:
                     result_a = " ".join(["there was a procession or journey including", joined_return_list])
-                if not l_same and l_standing:
+                elif l_standing:
                     result_a = " ".join(["there was a gathering including", joined_return_list])
-
-                result_a = " ".join(["there were", joined_return_list])
+                else:
+                    result_a = " ".join(["there were", joined_return_list])
 
             # if there really is tail, then there is either an obj associated with the clause or date. Figure out which
             # and annotate accordingly.
             if real_tail != None:
                 if tail_bit == 0: # Obj_tail without second Clause_f+
-                    return " near a(n) ".join([result_a, obj_string])
+                    return " near a ".join([result_a, obj_string])
                 else: # Date_tail without a second Clause_f+
                     return " ".join([result_a, date_string]) # simply join the result_a with the date string, since Date formats itself.
             
@@ -330,7 +335,7 @@ class DateTail(TreeNode):
             if obj_string == None:
                 return "@".join([date_string, human_string]), r_pose_list, r_orientation_list, r_gender_list
             else:
-                return "@".join(date_string, obj_string, human_string), r_pose_list, r_orientation_list, r_gender_list
+                return "@".join([date_string, obj_string, human_string]), r_pose_list, r_orientation_list, r_gender_list
 
         else:
             return date_string, [], [], []
@@ -372,7 +377,7 @@ class ObjTail(TreeNode):
             if date_string == None:
                 return "@".join([obj_string, human_string]), r_pose_list, r_orientation_list, r_gender_list
             else:
-                return "@".join(obj_string, date_string, human_string), r_pose_list, r_orientation_list, r_gender_list
+                return "@".join([obj_string, date_string, human_string]), r_pose_list, r_orientation_list, r_gender_list
 
         else:
             return obj_string, [], [], []
