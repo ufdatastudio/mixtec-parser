@@ -1,6 +1,24 @@
 # Mixtec Parser
 
-This repo contains a parser and interpreter for a limited grammar intended for Mixtec codices.
+This repo contains a parser and interpreter for a limited grammar intended for Mixtec codices, together with a Streamlit demo that narrates encoded scenes in English.
+It is the companion code for the ALVR 2026 paper [Formal Machine Interpretation for the Semasiographic Mixtec Codices of Precolonial and Early Colonial Mesoamerica](https://aclanthology.org/2026.alvr-main.20/).
+
+## Streamlit demo
+
+The demo composes a scene as a sequence of glyph tokens, parses it with the grammar below, renders the abstract syntax tree, and interprets it into English.
+It also reads and writes the XML scene encoding used in the paper (Figure 2), and ships with attested and constructed example scenes, starting with the marriage of Lady 9 Eagle and Lord 6 Alligator from page 26 of the Codex Zouche-Nuttall.
+
+Run it with [uv](https://docs.astral.sh/uv/):
+
+    uv sync
+    uv run streamlit run app.py
+
+The demo code lives in `app.py` (interface), `scenes.py` (token specs and the XML encoding), `ast_viz.py` (syntax tree rendering), and `presets.py` (example scenes).
+The paper's pipeline is `parser.py` (recursive descent parser over `tokens.py`) and `tree_node.py` plus `interpreter.py` (AST nodes that interpret themselves).
+
+## Tests
+
+    uv run python -m pytest
 
 ## Context Free Grammar (CFG):
 
@@ -37,3 +55,17 @@ This repo contains a parser and interpreter for a limited grammar intended for M
 
     - Tokenizer inserts the end of sentence token, which is purely a meta-token, at the end of each scene, which should correspond roughly to sentences.
 
+## Citation
+
+    @inproceedings{driggers-ellis-etal-2026-formal,
+        title = "Formal Machine Interpretation for the Semasiographic {M}ixtec Codices of Precolonial and Early Colonial Mesoamerica",
+        author = "Driggers-Ellis, Christopher and Ayoubi, Gabriel and Salunke, Girish and Grant, Christan",
+        booktitle = "Proceedings of the 4th Workshop on Advances in Language and Vision Research ({ALVR})",
+        month = jul,
+        year = "2026",
+        address = "San Diego, California, USA",
+        publisher = "Association for Computational Linguistics",
+        url = "https://aclanthology.org/2026.alvr-main.20/",
+        pages = "230--238",
+        doi = "10.18653/v1/2026.alvr-main.20"
+    }
