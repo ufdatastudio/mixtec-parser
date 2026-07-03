@@ -128,23 +128,32 @@ def default_xml() -> str:
     return scenes.specs_to_xml(scenes.ensure_end(wedding["specs"]))
 
 
+def _apply_preset(preset: dict) -> None:
+    """Load a preset and keep the dropdown selection in sync with it."""
+    st.session_state.specs = copy.deepcopy(preset["specs"])
+    st.session_state.active_preset = preset["title"]
+    st.session_state.preset_choice = preset["title"]
+
+
+def _mark_scene_edited() -> None:
+    """The scene diverged from any preset, so clear the dropdown selection."""
+    st.session_state.active_preset = None
+    st.session_state.preset_choice = None
+
+
 def init_state() -> None:
     # thumbnails in the scene strip select a scene through the scene query param
     requested = st.query_params.get("scene")
     if requested:
         try:
-            preset = presets.by_key(requested)
-            st.session_state.specs = copy.deepcopy(preset["specs"])
-            st.session_state.active_preset = preset["title"]
+            _apply_preset(presets.by_key(requested))
             logger.info("Loaded scene from query param: {}", requested)
         except KeyError:
             logger.warning("Unknown scene in query param: {}", requested)
         st.query_params.clear()
 
     if "specs" not in st.session_state:
-        wedding = presets.PRESETS[0]
-        st.session_state.specs = copy.deepcopy(wedding["specs"])
-        st.session_state.active_preset = wedding["title"]
+        _apply_preset(presets.PRESETS[0])
     if "xml_text" not in st.session_state:
         st.session_state.xml_text = default_xml()
 
@@ -154,10 +163,7 @@ def load_preset() -> None:
     title = st.session_state.preset_choice
     if not title:
         return
-    preset = presets.by_title(title)
-    st.session_state.specs = copy.deepcopy(preset["specs"])
-    st.session_state.active_preset = title
-    st.session_state.preset_choice = None
+    _apply_preset(presets.by_title(title))
     logger.info("Loaded preset: {}", title)
 
 
@@ -175,7 +181,7 @@ def add_figure() -> None:
         specs.append(scenes.near_object_spec(near))
     if st.session_state.fig_named:
         specs.append(scenes.name_date_spec(st.session_state.fig_sign, int(st.session_state.fig_number)))
-    st.session_state.active_preset = None
+    _mark_scene_edited()
 
 
 def add_date() -> None:
@@ -183,7 +189,7 @@ def add_date() -> None:
     specs.append(scenes.year_spec(st.session_state.date_year_sign, int(st.session_state.date_year_number)))
     if st.session_state.date_has_day:
         specs.append(scenes.name_date_spec(st.session_state.date_day_sign, int(st.session_state.date_day_number)))
-    st.session_state.active_preset = None
+    _mark_scene_edited()
 
 
 def add_object() -> None:
@@ -191,23 +197,23 @@ def add_object() -> None:
     if not identity:
         identity = st.session_state.obj_select
     st.session_state.specs.append(scenes.object_spec(identity))
-    st.session_state.active_preset = None
+    _mark_scene_edited()
 
 
 def add_scene_break() -> None:
     st.session_state.specs.append(scenes.end_spec())
-    st.session_state.active_preset = None
+    _mark_scene_edited()
 
 
 def undo_token() -> None:
     if st.session_state.specs:
         st.session_state.specs.pop()
-    st.session_state.active_preset = None
+    _mark_scene_edited()
 
 
 def clear_scene() -> None:
     st.session_state.specs = []
-    st.session_state.active_preset = None
+    _mark_scene_edited()
 
 
 def send_scene_to_xml() -> None:
@@ -218,7 +224,7 @@ def send_scene_to_xml() -> None:
 def load_xml_into_builder() -> None:
     try:
         st.session_state.specs = scenes.xml_to_specs(st.session_state.xml_text)
-        st.session_state.active_preset = None
+        _mark_scene_edited()
         st.toast("XML loaded into the scene composer.", icon="📜")
     except ValueError as exc:
         logger.warning("Could not load XML into the builder: {}", exc)
@@ -235,6 +241,22 @@ def _image_data_uri(path: str) -> str:
     with open(path, "rb") as file:
         encoded = base64.b64encode(file.read()).decode()
     return f"data:image/jpeg;base64,{encoded}"
+
+
+def _preset_facsimile(preset: dict) -> dict | None:
+    """Resolve a preset's codex facsimile for display, or None if absent."""
+    image = preset.get("facsimile")
+    if not image:
+        return None
+    if not image.startswith("http"):
+        image = os.path.join(APP_DIR, image)
+        if not os.path.exists(image):
+            return None
+    return {
+        "image": image,
+        "caption": preset.get("facsimile_caption"),
+        "link": preset.get("facsimile_link"),
+    }
 
 
 def scene_strip_html() -> str:
@@ -308,7 +330,7 @@ def render_narration(sentences: list[str]) -> None:
     st.markdown(f'<div class="narration">{body}</div>', unsafe_allow_html=True)
 
 
-def render_scene_outputs(specs: list[dict], show_xml: bool = True) -> None:
+def render_scene_outputs(specs: list[dict], show_xml: bool = True, facsimile: dict | None = None) -> None:
     """Parse the specs and show narration, the AST, and the XML encoding."""
     token_list = scenes.specs_to_tokens(scenes.ensure_end(specs))
     try:
@@ -331,6 +353,11 @@ def render_scene_outputs(specs: list[dict], show_xml: bool = True) -> None:
         st.markdown("###### Abstract syntax tree, as in Figure 3 of the paper")
         graphviz_chart(ast_viz.to_dot(root))
     with detail_col:
+        if facsimile:
+            st.markdown("###### The scene on the codex page")
+            st.image(facsimile["image"], caption=facsimile.get("caption"))
+            if facsimile.get("link"):
+                st.markdown(f'[View this scene in the dataset]({facsimile["link"]})')
         st.markdown("###### Scene sketch")
         st.markdown(sketch.to_svg(specs), unsafe_allow_html=True)
         st.caption(
@@ -446,25 +473,12 @@ def render_compose_tab() -> None:
             "codex facsimile below when one exists."
         )
 
+    active_facsimile = None
     if st.session_state.active_preset:
         preset = presets.by_title(st.session_state.active_preset)
-        facsimile = preset.get("facsimile")
-        if facsimile and not facsimile.startswith("http"):
-            facsimile = os.path.join(APP_DIR, facsimile)
-            if not os.path.exists(facsimile):
-                facsimile = None
-        if facsimile:
-            image_col, text_col = st.columns([1.1, 2.9], gap="medium")
-            with image_col:
-                st.image(facsimile, caption=preset.get("facsimile_caption"))
-                if preset.get("facsimile_link"):
-                    st.markdown(f'[View this scene in the dataset]({preset["facsimile_link"]})')
-            with text_col:
-                st.caption(f'{preset["source"]}')
-                st.markdown(preset["blurb"])
-        else:
-            st.caption(f'{preset["source"]}')
-            st.markdown(preset["blurb"])
+        st.caption(f'{preset["source"]}')
+        st.markdown(preset["blurb"])
+        active_facsimile = _preset_facsimile(preset)
 
     st.markdown("###### Scene tokens, in reading order")
     render_chips(st.session_state.specs)
@@ -527,7 +541,7 @@ def render_compose_tab() -> None:
 
     st.divider()
     if st.session_state.specs:
-        render_scene_outputs(st.session_state.specs)
+        render_scene_outputs(st.session_state.specs, facsimile=active_facsimile)
     else:
         st.info("The scene is empty. Load an example above or add glyph tokens.")
 
