@@ -138,6 +138,13 @@ def load_preset() -> None:
     logger.info("Loaded preset: {}", title)
 
 
+def load_attested_scene(preset_key: str) -> None:
+    preset = presets.by_key(preset_key)
+    st.session_state.specs = copy.deepcopy(preset["specs"])
+    st.session_state.active_preset = preset["title"]
+    logger.info("Loaded attested scene: {}", preset_key)
+
+
 def add_figure() -> None:
     specs = st.session_state.specs
     specs.append(scenes.human_spec(
@@ -354,12 +361,43 @@ def render_sidebar() -> None:
 
 def render_compose_tab() -> None:
     st.markdown(
-        "Load an example scene or compose your own from glyph tokens. The parser "
-        "and interpreter run on every change."
+        "Pick a scene from the codex, load a constructed example, or compose "
+        "your own from glyph tokens. The parser and interpreter run on every "
+        "change."
     )
 
+    st.markdown("###### Scenes from the codex")
+    gallery_columns = st.columns(4)
+    for index, scene in enumerate(presets.ATTESTED_SCENES):
+        with gallery_columns[index % 4]:
+            st.image(os.path.join(APP_DIR, scene["thumb"]), caption=scene["label"])
+            st.button(
+                "Interpret this scene",
+                key=f'attested_{scene["preset_key"]}',
+                on_click=load_attested_scene,
+                args=(scene["preset_key"],),
+                type="primary",
+            )
+    st.caption(
+        "The paper encodes the wedding scene; more cutouts join the gallery as "
+        "their token encodings are curated."
+    )
+
+    with st.expander("Browse more scene cutouts from the codex"):
+        st.markdown(
+            "These segments come from the lab's "
+            f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) of 270 scene "
+            "cutouts. They await token encodings, so for now they are for "
+            "browsing; each links to its full-resolution image."
+        )
+        browse_columns = st.columns(3)
+        for index, scene in enumerate(presets.BROWSE_SCENES):
+            with browse_columns[index % 3]:
+                st.image(os.path.join(APP_DIR, scene["thumb"]))
+                st.markdown(f'[{scene["label"]}]({scene["link"]})')
+
     st.selectbox(
-        "Load an example scene",
+        "Or load a constructed example scene",
         options=[preset["title"] for preset in presets.PRESETS],
         index=None,
         placeholder="Choose a scene…",

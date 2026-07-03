@@ -181,3 +181,60 @@ def by_title(title: str) -> dict:
         if preset["title"] == title:
             return preset
     raise KeyError(title)
+
+
+def by_key(key: str) -> dict:
+    """Return the preset whose key matches, raising KeyError if absent."""
+    for preset in PRESETS:
+        if preset["key"] == key:
+            return preset
+    raise KeyError(key)
+
+
+_DATASET_BLOB = (
+    "https://huggingface.co/datasets/ufdatastudio/"
+    "mixtec-zouche-nuttall-british-museum/blob/main/scene-cutouts/"
+)
+
+# Scene cutouts whose token encodings exist, shown as a clickable gallery.
+# To promote a browse-only scene into this gallery, curate its token sequence
+# as a preset above and add an entry here with the preset's key.
+ATTESTED_SCENES = [
+    {
+        "preset_key": "wedding",
+        "thumb": "assets/thumbs/026-019-a-096.jpg",
+        "label": "The wedding of Lady 9 Eagle and Lord 6 Alligator",
+        "link": _DATASET_BLOB + "026-019-a-096.png",
+    },
+]
+
+# Scene cutouts from the dataset that await token encodings. Browsing only.
+BROWSE_SCENES = [
+    {
+        "file": "026-019-a-094.png",
+        "thumb": "assets/thumbs/026-019-a-094.jpg",
+        "label": "Scene 94 · a couple over the marriage bath",
+    },
+    {
+        "file": "026-019-a-095.png",
+        "thumb": "assets/thumbs/026-019-a-095.jpg",
+        "label": "Scene 95 · audiences at two temples",
+    },
+    {
+        "file": "034-026-a-124.png",
+        "thumb": "assets/thumbs/034-026-a-124.jpg",
+        "label": "Scene 124 · a lord enthroned on a platform",
+    },
+    {
+        "file": "035-026-a-126.png",
+        "thumb": "assets/thumbs/035-026-a-126.jpg",
+        "label": "Scene 126 · seated councils in three bands",
+    },
+    {
+        "file": "036-026-b-127.png",
+        "thumb": "assets/thumbs/036-026-b-127.jpg",
+        "label": "Scene 127 · offerings and audiences (reverse)",
+    },
+]
+for scene in BROWSE_SCENES:
+    scene["link"] = _DATASET_BLOB + scene["file"]

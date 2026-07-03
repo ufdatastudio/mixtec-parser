@@ -1,11 +1,15 @@
 """Every demo preset must parse, interpret, and render as an AST."""
 
+import os
+
 import pytest
 
 import ast_viz
 import parser
 import presets
 import scenes
+
+REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 @pytest.mark.parametrize("preset", presets.PRESETS, ids=lambda preset: preset["key"])
@@ -33,6 +37,23 @@ def test_wedding_preset_matches_the_paper_reading():
     assert scenes.narrate(root) == [
         "In Year 6 Flint Day 7 Eagle Lady 9 Eagle married Lord 6 Alligator."
     ]
+
+
+def test_attested_scenes_reference_real_presets_and_thumbnails():
+    for scene in presets.ATTESTED_SCENES:
+        preset = presets.by_key(scene["preset_key"])
+        assert preset["specs"]
+        assert os.path.exists(os.path.join(REPO_DIR, scene["thumb"]))
+        assert scene["label"]
+        assert scene["link"].startswith("https://huggingface.co/datasets/")
+
+
+def test_browse_scenes_have_thumbnails_and_links():
+    for scene in presets.BROWSE_SCENES:
+        assert os.path.exists(os.path.join(REPO_DIR, scene["thumb"]))
+        assert scene["label"]
+        assert scene["link"].startswith("https://huggingface.co/datasets/")
+        assert scene["link"].endswith(scene["file"])
 
 
 def test_two_scene_preset_narrates_two_sentences():
