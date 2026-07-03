@@ -13,10 +13,20 @@ PRESETS = [
         "key": "wedding",
         "title": "A royal wedding — Lady 9 Eagle marries Lord 6 Alligator",
         "source": "Codex Zouche-Nuttall, page 26 (obverse). The paper's running example, Figures 2 and 3.",
-        "facsimile": "assets/czn-p26-marriage.jpg",
+        "facsimile": (
+            "https://huggingface.co/datasets/ufdatastudio/"
+            "mixtec-zouche-nuttall-british-museum/resolve/main/"
+            "scene-cutouts/026-019-a-096.png"
+        ),
         "facsimile_caption": (
-            "The scene on page 26 of the Codex Zouche-Nuttall (obverse). "
+            "The wedding scene from the Codex Zouche-Nuttall, served from the "
+            "lab's scene-cutouts dataset (026-019-a-096.png). "
             "Image courtesy of the British Museum."
+        ),
+        "facsimile_link": (
+            "https://huggingface.co/datasets/ufdatastudio/"
+            "mixtec-zouche-nuttall-british-museum/blob/main/"
+            "scene-cutouts/026-019-a-096.png"
         ),
         "blurb": (
             "Two seated figures face one another across a house glyph, the classic "

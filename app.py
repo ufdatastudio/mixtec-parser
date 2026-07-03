@@ -28,6 +28,8 @@ PAPER_PDF_URL = "https://aclanthology.org/2026.alvr-main.20.pdf"
 POSTER_URL = "https://ufdatastudio.com/papers/driggers-ellis2026formal-poster.pdf"
 LAB_URL = "https://ufdatastudio.com"
 VIT_DEMO_URL = "https://mixtec.streamlit.app"
+SCENES_DATASET_URL = "https://huggingface.co/datasets/ufdatastudio/mixtec-zouche-nuttall-british-museum"
+FIGURES_DATASET_URL = "https://huggingface.co/datasets/ufdatastudio/mixtec-figures"
 
 BIBTEX = """@inproceedings{driggers-ellis-etal-2026-formal,
     title = "Formal Machine Interpretation for the Semasiographic {M}ixtec Codices of Precolonial and Early Colonial Mesoamerica",
@@ -344,6 +346,7 @@ def render_sidebar() -> None:
         st.markdown(
             f"- [Paper on the ACL Anthology]({PAPER_URL})\n"
             f"- [Poster]({POSTER_URL})\n"
+            f"- [Scene and glyph cutouts]({SCENES_DATASET_URL}) from the codex, on Hugging Face\n"
             f"- [Vision-model demo]({VIT_DEMO_URL}) that classifies the glyphs\n"
             f"- [UF Data Studio]({LAB_URL})"
         )
@@ -367,12 +370,16 @@ def render_compose_tab() -> None:
     if st.session_state.active_preset:
         preset = presets.by_title(st.session_state.active_preset)
         facsimile = preset.get("facsimile")
-        if facsimile:
+        if facsimile and not facsimile.startswith("http"):
             facsimile = os.path.join(APP_DIR, facsimile)
-        if facsimile and os.path.exists(facsimile):
+            if not os.path.exists(facsimile):
+                facsimile = None
+        if facsimile:
             image_col, text_col = st.columns([1.1, 2.9], gap="medium")
             with image_col:
                 st.image(facsimile, caption=preset.get("facsimile_caption"))
+                if preset.get("facsimile_link"):
+                    st.markdown(f'[View this scene in the dataset]({preset["facsimile_link"]})')
             with text_col:
                 st.caption(f'{preset["source"]}')
                 st.markdown(preset["blurb"])
@@ -587,6 +594,17 @@ def render_about_tab() -> None:
             "Salunke et al. (CHR 2025); this paper contributes the highlighted "
             "symbolic stages. Try the classifiers in the "
             f"[vision-model demo]({VIT_DEMO_URL})."
+        )
+        st.markdown("#### The source imagery")
+        st.markdown(
+            "The lab publishes the codex imagery this pipeline reads on "
+            "Hugging Face. The "
+            f"[Zouche-Nuttall labeled dataset]({SCENES_DATASET_URL}) holds 270 "
+            "scene cutouts alongside figure and name-date cutouts, segmented "
+            "from British Museum scans; the wedding preset in this demo "
+            "displays its scene directly from that dataset. A companion "
+            f"[figures dataset]({FIGURES_DATASET_URL}) adds imagery from the "
+            "Codices Selden and Vindobonensis."
         )
         st.markdown("#### Limitations the paper acknowledges")
         st.markdown(

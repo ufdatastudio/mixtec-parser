@@ -13,8 +13,9 @@ Run it with [uv](https://docs.astral.sh/uv/):
     uv sync
     uv run streamlit run app.py
 
-The demo code lives in `app.py` (interface), `scenes.py` (token specs and the XML encoding), `ast_viz.py` (syntax tree rendering), and `presets.py` (example scenes).
+The demo code lives in `app.py` (interface), `scenes.py` (token specs and the XML encoding), `ast_viz.py` (syntax tree rendering), `sketch.py` (schematic scene drawings), and `presets.py` (example scenes).
 The paper's pipeline is `parser.py` (recursive descent parser over `tokens.py`) and `tree_node.py` plus `interpreter.py` (AST nodes that interpret themselves).
+The codex imagery behind the scenes lives in the lab's [Zouche-Nuttall labeled dataset](https://huggingface.co/datasets/ufdatastudio/mixtec-zouche-nuttall-british-museum) on Hugging Face, which the demo links and displays; images appear courtesy of the British Museum.
 
 ## Tests
 
