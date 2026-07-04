@@ -120,15 +120,10 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
     }
 }
 .vbar-results { width: 0; border-left: 1.5px solid #D9CDB2; height: 520px; margin: 0.4rem auto 0 auto; }
-.scene-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px 2px; }
-.scene-strip span { flex: 0 0 auto; display: block; }
-.scene-strip img {
-    height: 96px; width: auto; display: block; border-radius: 6px;
-    border: 1.5px solid #D9CDB2; background: #FFF;
-}
-.scene-strip span.encoded img { border: 2px solid #9E2B25; }
-.scene-strip span.selected img {
-    border: 3px solid #9E2B25; box-shadow: 0 0 0 3px #E5C4BF;
+.scene-single img {
+    height: 150px; max-width: 100%; width: auto; display: block;
+    border: 2.5px solid #9E2B25; border-radius: 8px; background: #FFF;
+    padding: 3px;
 }
 </style>
 """
@@ -261,31 +256,12 @@ def _preset_facsimile(preset: dict) -> dict | None:
     }
 
 
-def scene_strip_html(active_key: str | None) -> str:
-    """A horizontally scrollable strip of codex scene thumbnails.
-
-    Scenes with token encodings come first, outlined in red; the one matching
-    the dropdown selection is highlighted. The rest are shown for browsing,
-    with their dataset link surfaced in the results panel once selected.
-    """
-    cards = []
+def attested_scene_for(active_key: str | None) -> dict | None:
+    """The gallery entry whose preset matches the dropdown selection, if any."""
     for scene in presets.ATTESTED_SCENES:
-        uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
-        selected = scene["preset_key"] == active_key
-        classes = "encoded selected" if selected else "encoded"
-        label = html.escape(
-            f'{scene["label"]} (selected)' if selected else scene["label"]
-        )
-        cards.append(
-            f'<span class="{classes}" title="{label}"><img src="{uri}" alt="{label}"/></span>'
-        )
-    for scene in presets.BROWSE_SCENES:
-        uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
-        label = html.escape(scene["label"])
-        cards.append(
-            f'<span title="{label}"><img src="{uri}" alt="{label}"/></span>'
-        )
-    return f'<div class="scene-strip">{"".join(cards)}</div>'
+        if scene["preset_key"] == active_key:
+            return scene
+    return None
 
 
 def graphviz_chart(dot: str) -> None:
@@ -467,13 +443,30 @@ def render_compose_tab() -> None:
     with gallery_col:
         st.markdown("###### Scenes from the codex")
         active_key = active_preset["key"] if active_preset else None
-        st.markdown(scene_strip_html(active_key), unsafe_allow_html=True)
-        st.caption(
-            "Red-outlined scenes have token encodings, and the highlighted "
-            "one is the scene chosen in the dropdown. All cutouts come from "
-            f"the [Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging "
-            "Face and join the encoded set as their readings are curated."
-        )
+        scene = attested_scene_for(active_key)
+        if scene:
+            uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
+            label = html.escape(scene["label"])
+            st.markdown(
+                f'<div class="scene-single"><img src="{uri}" alt="{label}" title="{label}"/></div>',
+                unsafe_allow_html=True,
+            )
+            st.caption(
+                f'{scene["label"]}, as segmented in the '
+                f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging Face."
+            )
+        elif active_preset:
+            st.caption(
+                "This constructed example has no attested codex scene. The "
+                "encoded cutouts come from the "
+                f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging "
+                "Face, and more scenes appear here as readings are curated."
+            )
+        else:
+            st.caption(
+                "Choose a scene in the dropdown. Scenes with a codex source "
+                "show their cutout here."
+            )
 
     with bar_col:
         st.markdown('<div class="vbar"></div>', unsafe_allow_html=True)
