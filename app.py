@@ -20,6 +20,7 @@ import ast_viz
 import interpreter
 import parser
 import presets
+import run_log
 import scenes
 import sketch
 
@@ -127,6 +128,7 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
     border: 2.5px solid #9E2B25; border-radius: 8px; background: #FFF;
     padding: 3px;
 }
+.scene-single.illustrative img { border-color: #B97A24; }
 </style>
 """
 
@@ -312,13 +314,19 @@ def render_narration(sentences: list[str]) -> None:
     st.markdown(f'<div class="narration">{body}</div>', unsafe_allow_html=True)
 
 
-def render_scene_outputs(specs: list[dict], show_xml: bool = True, facsimile: dict | None = None) -> None:
+def render_scene_outputs(
+    specs: list[dict],
+    show_xml: bool = True,
+    facsimile: dict | None = None,
+    source: str = "compose",
+) -> None:
     """Parse the specs and show narration, the AST, and the XML encoding."""
     token_list = scenes.specs_to_tokens(scenes.ensure_end(specs))
     try:
         root = parser.Parser()(token_list)
     except parser.ParseError as exc:
         logger.info("Parse error: {}", exc)
+        run_log.log_run(source, specs, error=str(exc))
         st.error(f"This token sequence is not in the grammar. {exc}")
         st.caption(
             "Every scene needs at least one human figure, a name-date must follow "
@@ -327,15 +335,12 @@ def render_scene_outputs(specs: list[dict], show_xml: bool = True, facsimile: di
         )
         return
 
+    sentences = scenes.narrate(root)
+    run_log.log_run(source, specs, sentences=sentences)
     st.markdown("###### Machine narration")
-    render_narration(scenes.narrate(root))
+    render_narration(sentences)
 
     detail_col, results_bar_col, ast_col = st.columns([2, 0.14, 3], gap="small")
-    with ast_col:
-        st.markdown("###### Abstract syntax tree, as in Figure 3 of the paper")
-        graphviz_chart(ast_viz.to_dot(root))
-    with results_bar_col:
-        st.markdown('<div class="vbar-results"></div>', unsafe_allow_html=True)
     with detail_col:
         if facsimile:
             st.markdown("###### The scene on the codex page")
@@ -349,8 +354,13 @@ def render_scene_outputs(specs: list[dict], show_xml: bool = True, facsimile: di
             "their figures, personal objects ride with their owners, and red "
             "bands divide scenes."
         )
+    with results_bar_col:
+        st.markdown('<div class="vbar-results"></div>', unsafe_allow_html=True)
+    with ast_col:
+        st.markdown("###### Abstract syntax tree")
+        graphviz_chart(ast_viz.to_dot(root))
         if show_xml:
-            st.markdown("###### XML scene encoding, as in Figure 2 of the paper")
+            st.markdown("###### XML scene encoding")
             st.code(scenes.specs_to_xml(scenes.ensure_end(specs)), language="xml")
         with st.expander("Raw interpreter output"):
             st.code(interpreter.Interpreter()(parser.Parser()(
@@ -463,6 +473,20 @@ def render_compose_tab() -> None:
                 f'{scene["label"]}, as segmented in the '
                 f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging Face."
             )
+        elif active_preset and active_preset["key"] in presets.ILLUSTRATIVE_SCENES:
+            illustration = presets.ILLUSTRATIVE_SCENES[active_preset["key"]]
+            uri = _image_data_uri(os.path.join(APP_DIR, illustration["thumb"]))
+            label = html.escape(illustration["label"])
+            st.markdown(
+                f'<div class="scene-single illustrative"><img src="{uri}" alt="{label}" title="{label}"/></div>',
+                unsafe_allow_html=True,
+            )
+            st.caption(
+                "A comparable configuration from the codex, shown for "
+                f'illustration rather than as this exact scene: '
+                f'[{illustration["label"]}]({illustration["link"]}), from the '
+                f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL})."
+            )
         elif active_preset:
             st.caption(
                 "This constructed example has no attested codex scene. The "
@@ -472,8 +496,8 @@ def render_compose_tab() -> None:
             )
         else:
             st.caption(
-                "Choose a scene in the dropdown. Scenes marked 📜 show their "
-                "codex cutout here."
+                "Choose a scene in the dropdown. Scenes marked 📜 or 🖼 show "
+                "a codex cutout here."
             )
 
     with bar_col:
@@ -490,7 +514,9 @@ def render_compose_tab() -> None:
             on_change=load_preset,
             label_visibility="collapsed",
             format_func=lambda title: (
-                f"📜 {title}" if title in presets.ATTESTED_TITLES else title
+                f"📜 {title}" if title in presets.ATTESTED_TITLES
+                else f"🖼 {title}" if title in presets.ILLUSTRATED_TITLES
+                else title
             ),
         )
         if active_preset:
@@ -499,8 +525,9 @@ def render_compose_tab() -> None:
         else:
             st.caption(
                 "Attested and constructed scenes: weddings, audiences, "
-                "sacrifices, combats, and processions. Scenes marked 📜 "
-                "come with their scene from the codex."
+                "sacrifices, combats, and processions. 📜 marks a scene "
+                "attested in the codex; 🖼 marks one with a comparable codex "
+                "scene shown for illustration."
             )
 
     st.markdown("###### Scene tokens, in reading order")
@@ -595,7 +622,7 @@ def render_xml_tab() -> None:
         return
 
     render_chips(specs)
-    render_scene_outputs(specs, show_xml=False)
+    render_scene_outputs(specs, show_xml=False, source="xml")
 
 
 def render_grammar_tab() -> None:
