@@ -230,6 +230,24 @@ ATTESTED_SCENES = [
 # Titles of presets that come with a codex scene, for marking in the UI.
 ATTESTED_TITLES = {by_key(scene["preset_key"])["title"] for scene in ATTESTED_SCENES}
 
+# Codex cutouts that show a configuration comparable to a constructed preset.
+# They are illustrations of the pattern, not the scenes the tokens describe,
+# and the UI labels them as such.
+ILLUSTRATIVE_SCENES = {
+    "throne": {
+        "thumb": "assets/thumbs/034-026-a-124.jpg",
+        "label": "A lord enthroned on a platform receives visitors (scene 124)",
+        "link": _DATASET_BLOB + "034-026-a-124.png",
+    },
+    "consultation": {
+        "thumb": "assets/thumbs/026-019-a-095.jpg",
+        "label": "Audiences at two temples (scene 95)",
+        "link": _DATASET_BLOB + "026-019-a-095.png",
+    },
+}
+
+ILLUSTRATED_TITLES = {by_key(key)["title"] for key in ILLUSTRATIVE_SCENES}
+
 # Scene cutouts from the dataset that await token encodings. Browsing only.
 BROWSE_SCENES = [
     {

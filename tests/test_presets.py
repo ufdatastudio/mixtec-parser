@@ -55,6 +55,17 @@ def test_attested_scenes_reference_real_presets_and_thumbnails():
         assert scene["link"].startswith("https://huggingface.co/datasets/")
 
 
+def test_illustrative_scenes_reference_real_presets_and_thumbnails():
+    for key, scene in presets.ILLUSTRATIVE_SCENES.items():
+        assert presets.by_key(key)
+        assert os.path.exists(os.path.join(REPO_DIR, scene["thumb"]))
+        assert scene["label"]
+        assert scene["link"].startswith("https://huggingface.co/datasets/")
+    # attested and illustrative sets never overlap
+    attested = {scene["preset_key"] for scene in presets.ATTESTED_SCENES}
+    assert not attested & set(presets.ILLUSTRATIVE_SCENES)
+
+
 def test_browse_scenes_have_thumbnails_and_links():
     for scene in presets.BROWSE_SCENES:
         assert os.path.exists(os.path.join(REPO_DIR, scene["thumb"]))
