@@ -112,13 +112,15 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
 .vbar { width: 0; border-left: 1.5px solid #D9CDB2; height: 170px; margin: 0.5rem auto 0 auto; }
 .vbar-results { width: 0; border-left: 1.5px solid #D9CDB2; height: 520px; margin: 0.4rem auto 0 auto; }
 .scene-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px 2px; }
-.scene-strip a, .scene-strip span { flex: 0 0 auto; display: block; }
+.scene-strip span { flex: 0 0 auto; display: block; }
 .scene-strip img {
     height: 96px; width: auto; display: block; border-radius: 6px;
     border: 1.5px solid #D9CDB2; background: #FFF;
 }
-.scene-strip a:hover img { border-color: #9E2B25; box-shadow: 0 0 0 1px #9E2B25; }
-.scene-strip a.encoded img { border: 2.5px solid #9E2B25; }
+.scene-strip span.encoded img { border: 2px solid #9E2B25; }
+.scene-strip span.selected img {
+    border: 3px solid #9E2B25; box-shadow: 0 0 0 3px #E5C4BF;
+}
 </style>
 """
 
@@ -143,16 +145,6 @@ def _mark_scene_edited() -> None:
 
 
 def init_state() -> None:
-    # thumbnails in the scene strip select a scene through the scene query param
-    requested = st.query_params.get("scene")
-    if requested:
-        try:
-            _apply_preset(presets.by_key(requested))
-            logger.info("Loaded scene from query param: {}", requested)
-        except KeyError:
-            logger.warning("Unknown scene in query param: {}", requested)
-        st.query_params.clear()
-
     if "specs" not in st.session_state:
         _apply_preset(presets.PRESETS[0])
     if "xml_text" not in st.session_state:
@@ -260,21 +252,23 @@ def _preset_facsimile(preset: dict) -> dict | None:
     }
 
 
-def scene_strip_html() -> str:
+def scene_strip_html(active_key: str | None) -> str:
     """A horizontally scrollable strip of codex scene thumbnails.
 
-    Scenes with token encodings come first, framed in red; clicking one loads
-    it for interpretation through the scene query param. The rest are shown
-    for browsing only, with their dataset link surfaced in the results panel
-    once a scene is selected.
+    Scenes with token encodings come first, outlined in red; the one matching
+    the dropdown selection is highlighted. The rest are shown for browsing,
+    with their dataset link surfaced in the results panel once selected.
     """
     cards = []
     for scene in presets.ATTESTED_SCENES:
         uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
-        label = html.escape(f'Click to interpret: {scene["label"]}')
+        selected = scene["preset_key"] == active_key
+        classes = "encoded selected" if selected else "encoded"
+        label = html.escape(
+            f'{scene["label"]} (selected)' if selected else scene["label"]
+        )
         cards.append(
-            f'<a class="encoded" href="?scene={scene["preset_key"]}" target="_self" '
-            f'title="{label}"><img src="{uri}" alt="{label}"/></a>'
+            f'<span class="{classes}" title="{label}"><img src="{uri}" alt="{label}"/></span>'
         )
     for scene in presets.BROWSE_SCENES:
         uri = _image_data_uri(os.path.join(APP_DIR, scene["thumb"]))
@@ -448,12 +442,15 @@ def render_compose_tab() -> None:
 
     with gallery_col:
         st.markdown("###### Scenes from the codex")
-        st.markdown(scene_strip_html(), unsafe_allow_html=True)
+        active_key = None
+        if st.session_state.active_preset:
+            active_key = presets.by_title(st.session_state.active_preset)["key"]
+        st.markdown(scene_strip_html(active_key), unsafe_allow_html=True)
         st.caption(
-            "Red-framed scenes have token encodings; click one to interpret "
-            "it. The rest come from the "
-            f"[Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging Face "
-            "and join the encoded set as their readings are curated."
+            "Red-outlined scenes have token encodings, and the highlighted "
+            "one is the scene chosen in the dropdown. All cutouts come from "
+            f"the [Zouche-Nuttall dataset]({SCENES_DATASET_URL}) on Hugging "
+            "Face and join the encoded set as their readings are curated."
         )
 
     with bar_col:
