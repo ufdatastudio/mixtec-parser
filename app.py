@@ -464,8 +464,8 @@ def render_compose_tab() -> None:
             )
         else:
             st.caption(
-                "Choose a scene in the dropdown. Scenes with a codex source "
-                "show their cutout here."
+                "Choose a scene in the dropdown. Scenes marked 📜 show their "
+                "codex cutout here."
             )
 
     with bar_col:
@@ -481,6 +481,9 @@ def render_compose_tab() -> None:
             key="preset_choice",
             on_change=load_preset,
             label_visibility="collapsed",
+            format_func=lambda title: (
+                f"📜 {title}" if title in presets.ATTESTED_TITLES else title
+            ),
         )
         if active_preset:
             st.markdown(active_preset["blurb"])
@@ -488,8 +491,8 @@ def render_compose_tab() -> None:
         else:
             st.caption(
                 "Attested and constructed scenes: weddings, audiences, "
-                "sacrifices, combats, and processions. A chosen scene shows "
-                "its codex facsimile below when one exists."
+                "sacrifices, combats, and processions. Scenes marked 📜 "
+                "come with their scene from the codex."
             )
 
     st.markdown("###### Scene tokens, in reading order")

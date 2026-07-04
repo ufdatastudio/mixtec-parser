@@ -39,6 +39,13 @@ def test_wedding_preset_matches_the_paper_reading():
     ]
 
 
+def test_attested_titles_mark_presets_with_scenes():
+    assert presets.ATTESTED_TITLES == {
+        "A royal wedding — Lady 9 Eagle marries Lord 6 Alligator"
+    }
+    assert presets.ATTESTED_TITLES <= {preset["title"] for preset in presets.PRESETS}
+
+
 def test_attested_scenes_reference_real_presets_and_thumbnails():
     for scene in presets.ATTESTED_SCENES:
         preset = presets.by_key(scene["preset_key"])

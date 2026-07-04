@@ -208,6 +208,9 @@ ATTESTED_SCENES = [
     },
 ]
 
+# Titles of presets that come with a codex scene, for marking in the UI.
+ATTESTED_TITLES = {by_key(scene["preset_key"])["title"] for scene in ATTESTED_SCENES}
+
 # Scene cutouts from the dataset that await token encodings. Browsing only.
 BROWSE_SCENES = [
     {
