@@ -47,7 +47,7 @@ PRESETS = [
     {
         "key": "consultation",
         "title": "An audience — Lord 4 Wind consults Lady 10 Serpent",
-        "source": "Constructed example from the repository's test suite.",
+        "source": "From the repository's test suite on the main branch (main.py, test 1).",
         "blurb": (
             "A standing figure faces a seated one, which the interpreter reads as a "
             "consultation. The seated figure holds the authority in the exchange."
@@ -58,6 +58,25 @@ PRESETS = [
             scenes.name_date_spec("Wind", 4),
             scenes.human_spec("Lady", "sitting", "left"),
             scenes.name_date_spec("Serpent", 10),
+        ],
+    },
+    {
+        "key": "consult_house",
+        "title": "Counsel near a house — Lord 6 Death consults Lord 4 Wind",
+        "source": "From the repository's test suite on the main branch (main.py, test 2).",
+        "blurb": (
+            "A standing lord with a shield faces a seated one across a house glyph. "
+            "Both figures are lords, so the house reads as the setting rather than "
+            "a marriage, and the stander consults the sitter near it."
+        ),
+        "specs": [
+            scenes.year_spec("House", 5),
+            scenes.human_spec("Lord", "sitting", "right"),
+            scenes.name_date_spec("Wind", 4),
+            scenes.object_spec("house"),
+            scenes.human_spec("Lord", "standing", "left"),
+            scenes.near_object_spec("shield"),
+            scenes.name_date_spec("Death", 6),
         ],
     },
     {
@@ -80,7 +99,7 @@ PRESETS = [
     {
         "key": "sacrifice",
         "title": "A ritual sacrifice in Year 5 House",
-        "source": "Constructed example from the repository's test suite.",
+        "source": "From the repository's test suite on the main branch (main.py, test 3).",
         "blurb": (
             "A sacrificed animal near either standing figure marks the pair as "
             "participants in a ritual sacrifice rather than a meeting."
@@ -97,7 +116,7 @@ PRESETS = [
     {
         "key": "combat",
         "title": "Combat — Lord 4 Wind fights Lord 6 Death",
-        "source": "Constructed example from the repository's test suite.",
+        "source": "From the repository's test suite on the main branch (main.py, test 4).",
         "blurb": (
             "Weapons and shields near two standing figures who face one another turn "
             "the scene into combat. Take the weapons away and the two simply meet."

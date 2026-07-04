@@ -25,6 +25,8 @@ import sketch
 
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
+TEAM_EMAIL = "driggersellis.cw@ufl.edu"
+
 PAPER_URL = "https://aclanthology.org/2026.alvr-main.20/"
 PAPER_PDF_URL = "https://aclanthology.org/2026.alvr-main.20.pdf"
 POSTER_URL = "https://ufdatastudio.com/papers/driggers-ellis2026formal-poster.pdf"
@@ -401,6 +403,12 @@ def render_sidebar() -> None:
             "glyph tokens, parses it with the paper's context free grammar, and "
             "interprets the syntax tree into English."
         )
+        st.markdown(
+            "This is research software and its readings likely contain "
+            "errors. Please email the team at "
+            f"[{TEAM_EMAIL}](mailto:{TEAM_EMAIL}) for corrections or "
+            "collaboration."
+        )
         st.markdown("#### Token legend")
         legend = [
             (scenes.human_spec("Lord", "standing", "right"), "human figure"),
@@ -719,7 +727,10 @@ def render_about_tab() -> None:
             "Codex excerpts are not yet converted into the XML encoding "
             "automatically, so parsing currently requires curated XML. Toponym "
             "interpretation, which can hinge on archaeology and Mixtec-language "
-            "wordplay, is left to future, specialized work."
+            "wordplay, is left to future, specialized work. The readings this "
+            "demo produces likely contain several errors; please email the "
+            f"team at [{TEAM_EMAIL}](mailto:{TEAM_EMAIL}) for corrections or "
+            "collaboration."
         )
 
     with right_col:

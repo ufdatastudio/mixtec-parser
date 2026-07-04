@@ -63,6 +63,15 @@ def test_browse_scenes_have_thumbnails_and_links():
         assert scene["link"].endswith(scene["file"])
 
 
+def test_main_branch_test2_scene_is_a_preset():
+    preset = presets.by_key("consult_house")
+    token_list = scenes.specs_to_tokens(scenes.ensure_end(preset["specs"]))
+    root = parser.Parser()(token_list)
+    assert scenes.narrate(root) == [
+        "In Year 5 House Lord 6 Death consulted Lord 4 Wind near a house."
+    ]
+
+
 def test_two_scene_preset_narrates_two_sentences():
     preset = presets.by_title("Two scenes — a wedding, then combat")
     token_list = scenes.specs_to_tokens(scenes.ensure_end(preset["specs"]))
