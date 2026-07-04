@@ -21,6 +21,12 @@ The codex imagery behind the scenes lives in the lab's [Zouche-Nuttall labeled d
 
     uv run python -m pytest
 
+## Interaction logging
+
+Every interpretation run logs to the console through loguru; Streamlit Community Cloud shows that stream in the app's Manage app console, but only as a live tail.
+To keep a reviewable history, open the app's settings on Streamlit Community Cloud and add secrets: `hf_token` (a Hugging Face write token) and optionally `log_dataset` (defaults to `ufdatastudio/mixtec-parser-logs`).
+Runs then append as daily JSONL files under `logs/` in that private dataset every few minutes, each recording the time, an anonymous session id, the token specs, and the narration or parse error.
+
 ## Context Free Grammar (CFG):
 
     S = (Sent end)+
