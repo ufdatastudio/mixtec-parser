@@ -23,6 +23,23 @@ def test_wedding_sketch_labels_the_scene():
     assert "house" in svg
 
 
+def test_sketch_draws_a_pictogram_for_each_sign():
+    preset = presets.by_title("A royal wedding — Lady 9 Eagle marries Lord 6 Alligator")
+    svg = sketch.to_svg(preset["specs"])
+    assert 'data-sign="flint"' in svg
+    assert svg.count('data-sign="eagle"') == 2
+    assert 'data-sign="alligator"' in svg
+
+
+def test_every_day_sign_has_an_icon():
+    for sign in scenes.DAY_SIGNS:
+        icon = sketch._sign_icon(sign)
+        assert "<" in icon
+        # the letter fallback is reserved for unknown signs
+        assert "font-weight" not in icon, f"{sign} fell back to a letter"
+    assert "font-weight" in sketch._sign_icon("not-a-real-sign")
+
+
 def test_unnamed_figure_is_labeled_anonymously():
     svg = sketch.to_svg([scenes.human_spec("Lord", "standing", "right")])
     assert "a Lord" in svg

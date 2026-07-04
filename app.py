@@ -349,7 +349,7 @@ def render_scene_outputs(specs: list[dict], show_xml: bool = True, facsimile: di
     st.markdown("###### Machine narration")
     render_narration(scenes.narrate(root))
 
-    ast_col, results_bar_col, detail_col = st.columns([3, 0.14, 2], gap="small")
+    detail_col, results_bar_col, ast_col = st.columns([2, 0.14, 3], gap="small")
     with ast_col:
         st.markdown("###### Abstract syntax tree, as in Figure 3 of the paper")
         graphviz_chart(ast_viz.to_dot(root))
