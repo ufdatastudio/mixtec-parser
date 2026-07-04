@@ -323,14 +323,21 @@ def to_svg(specs: list[dict]) -> str:
             cursor = cx + half
 
         elif kind == "year":
-            half = 46.0
+            half = 42.0
             cx = cursor + half
+            center_y = BASE - 58
             body.append(
-                f'<g class="year">'
-                f'<circle cx="{cx - 8:.0f}" cy="{BASE - 58}" r="16" fill="none" stroke="{HUMAN_ACCENT}" stroke-width="3"/>'
-                f'<path d="M{cx - 25:.0f},{BASE - 46} L{cx - 8:.0f},{BASE - 88} L{cx + 9:.0f},{BASE - 46}" '
+                f'<g class="year sign" data-sign="{html.escape(str(spec["symbol"]).strip().lower())}">'
+                # the A-O cartouche: circle with the trapeze crossing it
+                f'<circle cx="{cx:.0f}" cy="{center_y}" r="16" fill="{DATE_TINT}" stroke="{HUMAN_ACCENT}" stroke-width="3"/>'
+                f'<path d="M{cx - 17:.0f},{BASE - 46} L{cx:.0f},{BASE - 88} L{cx + 17:.0f},{BASE - 46}" '
                 f'fill="none" stroke="{DATE_ACCENT}" stroke-width="3" stroke-linejoin="round"/>'
-                f"{_glyph_medallion(cx + 26, BASE - 84, int(spec['number']), str(spec['symbol']))}"
+                # the year bearer sign sits inside the circle of the A-O
+                f'<circle cx="{cx:.0f}" cy="{center_y}" r="10.5" fill="{DATE_TINT}"/>'
+                f'<g transform="translate({cx:.0f},{center_y}) scale(0.72)">{_sign_icon(str(spec["symbol"]))}</g>'
+                # number badge at the cartouche's shoulder
+                f'<circle cx="{cx + 20:.0f}" cy="{BASE - 82}" r="7" fill="#FFFDF6" stroke="{DATE_ACCENT}" stroke-width="1.4"/>'
+                f"{_text(cx + 20, BASE - 78.5, str(spec['number']), size=9, fill=INK, weight='bold')}"
                 f"{_text(cx, BASE + 16, 'Year ' + str(spec['number']) + ' ' + str(spec['symbol']))}"
                 f"</g>"
             )
