@@ -457,13 +457,16 @@ def render_compose_tab() -> None:
         "change."
     )
 
+    active_preset = None
+    if st.session_state.active_preset:
+        active_preset = presets.by_title(st.session_state.active_preset)
+    active_facsimile = _preset_facsimile(active_preset) if active_preset else None
+
     picker_col, bar_col, gallery_col = st.columns([2.4, 0.14, 2.6], gap="small")
 
     with gallery_col:
         st.markdown("###### Scenes from the codex")
-        active_key = None
-        if st.session_state.active_preset:
-            active_key = presets.by_title(st.session_state.active_preset)["key"]
+        active_key = active_preset["key"] if active_preset else None
         st.markdown(scene_strip_html(active_key), unsafe_allow_html=True)
         st.caption(
             "Red-outlined scenes have token encodings, and the highlighted "
@@ -486,18 +489,15 @@ def render_compose_tab() -> None:
             on_change=load_preset,
             label_visibility="collapsed",
         )
-        st.caption(
-            "Attested and constructed scenes: weddings, audiences, "
-            "sacrifices, combats, and processions. A chosen scene shows its "
-            "codex facsimile below when one exists."
-        )
-
-    active_facsimile = None
-    if st.session_state.active_preset:
-        preset = presets.by_title(st.session_state.active_preset)
-        st.caption(f'{preset["source"]}')
-        st.markdown(preset["blurb"])
-        active_facsimile = _preset_facsimile(preset)
+        if active_preset:
+            st.markdown(active_preset["blurb"])
+            st.caption(active_preset["source"])
+        else:
+            st.caption(
+                "Attested and constructed scenes: weddings, audiences, "
+                "sacrifices, combats, and processions. A chosen scene shows "
+                "its codex facsimile below when one exists."
+            )
 
     st.markdown("###### Scene tokens, in reading order")
     render_chips(st.session_state.specs)
