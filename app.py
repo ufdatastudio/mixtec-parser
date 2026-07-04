@@ -110,6 +110,15 @@ h1, h2, h3 { font-family: Georgia, 'Times New Roman', serif; }
 }
 .narration .scene-number { color: #9E2B25; font-size: 0.95rem; margin-right: 0.5rem; }
 .vbar { width: 0; border-left: 1.5px solid #D9CDB2; height: 170px; margin: 0.5rem auto 0 auto; }
+.sidebar-logo img { width: 72%; max-width: 210px; border-radius: 8px; display: block; }
+.portrait-note { display: none; }
+@media (max-width: 900px) {
+    .portrait-note {
+        display: block; background: #F6E7CE; border: 1px solid #B97A24;
+        border-radius: 8px; padding: 0.55rem 0.95rem; margin: 0.5rem 0 0.9rem 0;
+        font-size: 0.92rem; color: #221D18;
+    }
+}
 .vbar-results { width: 0; border-left: 1.5px solid #D9CDB2; height: 520px; margin: 0.4rem auto 0 auto; }
 .scene-strip { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 8px 2px; }
 .scene-strip span { flex: 0 0 auto; display: block; }
@@ -392,6 +401,8 @@ def render_hero() -> None:
         <a href="{VIT_DEMO_URL}">Glyph classifier demo</a>
         <a href="{LAB_URL}">UF Data Studio</a>
         </p>
+        <p class="portrait-note">This demo is best viewed in landscape or on a
+        laptop: the codex scenes, sketches, and parse trees sit side by side.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -400,6 +411,13 @@ def render_hero() -> None:
 
 def render_sidebar() -> None:
     with st.sidebar:
+        logo_path = os.path.join(APP_DIR, "logos/ufdatastudio-logo.jpeg")
+        if os.path.exists(logo_path):
+            st.markdown(
+                f'<a class="sidebar-logo" href="{LAB_URL}" title="UF Data Studio">'
+                f'<img src="{_image_data_uri(logo_path)}" alt="UF Data Studio"/></a>',
+                unsafe_allow_html=True,
+            )
         st.markdown("### About this demo")
         st.markdown(
             "Mixtec codices narrate history through arrangements of glyphs rather "
@@ -429,6 +447,7 @@ def render_sidebar() -> None:
             f"- [Vision-model demo]({VIT_DEMO_URL}) that classifies the glyphs\n"
             f"- [UF Data Studio]({LAB_URL})"
         )
+        st.caption("Best viewed in landscape or on a laptop.")
 
 
 def render_compose_tab() -> None:
